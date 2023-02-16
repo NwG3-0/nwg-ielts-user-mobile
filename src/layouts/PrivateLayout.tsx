@@ -1,5 +1,4 @@
 import { HomeScreen } from 'components/Home'
-import { Text } from 'react-native-svg'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/FontAwesome'
 
