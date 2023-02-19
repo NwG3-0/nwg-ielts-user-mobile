@@ -6,7 +6,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { USER_INFO } from 'models/api'
 import { useDataLoginInfoStore } from 'zustand/index '
 import { LoginScreen } from 'components/Auth/Login'
-import { RegisterScreen } from 'components/Auth/Register'
 
 const Stack = createNativeStackNavigator()
 
@@ -36,7 +35,6 @@ const App = () => {
         {!userInfo ? (
           <>
             <Stack.Screen name="Login" component={LoginScreen} />
-            <Stack.Screen name="Register" component={RegisterScreen} />
           </>
         ) : (
           <Stack.Screen name="PrivateLayout" component={PrivateLayout} />

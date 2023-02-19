@@ -40,7 +40,6 @@ const Input = React.forwardRef(
           ]}
         >
           <View>{icon && icon}</View>
-
           <TextInput
             style={[styles.textInput, style]}
             onChangeText={onChangeText}

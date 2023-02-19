@@ -2,8 +2,8 @@ import { Image, StyleSheet, View } from 'react-native'
 
 export const Header = () => {
   return (
-    <View>
-      <View></View>
+    <View style={styles.header}>
+      <Image source={require('../../../assets/images/ielts-logo.png')} style={styles.logo} resizeMode="contain" />
     </View>
   )
 }
@@ -11,11 +11,14 @@ export const Header = () => {
 const styles = StyleSheet.create({
   header: {
     width: '100%',
+    height: 50,
     display: 'flex',
-    backgroundColor: '#000',
+    alignContent: 'center',
+    paddingHorizontal: 10,
+    paddingVertical: 10,
   },
   logo: {
-    width: 66,
+    width: 100,
     height: 58,
   },
 })

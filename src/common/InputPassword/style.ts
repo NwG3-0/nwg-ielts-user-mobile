@@ -6,7 +6,7 @@ export default StyleSheet.create({
     height: 42,
     backgroundColor: '#808080',
     paddingHorizontal: 5,
-    marginTop: 5,
+    marginTop: 10,
   },
 
   inputContainer: {

@@ -1,11 +1,13 @@
 import { useState } from 'react'
-import { View, Text, TextInput, TouchableOpacity, Button } from 'react-native'
-import Input from 'common/InputPassword'
-import { AuthStyles } from 'style/auth'
-import { useDataLoginInfoStore } from 'zustand/index '
+import { View, Text, TextInput, TouchableOpacity, Button, ImageBackground } from 'react-native'
+import { Link } from '@react-navigation/native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { useDataLoginInfoStore } from 'zustand/index '
 import { USER_INFO } from 'models/api'
 import { login } from 'utils/api'
+import Input from 'common/InputPassword'
+import { AuthStyles } from 'style/auth'
+import { OpenURLButton } from 'common/OpenURLButton'
 
 export const LoginScreen = ({ navigation }: any) => {
   const [isHidePassword, setIsHidePassword] = useState(true)
@@ -39,6 +41,12 @@ export const LoginScreen = ({ navigation }: any) => {
 
   return (
     <View style={AuthStyles.container}>
+      <View style={AuthStyles.blurBackground}></View>
+      <ImageBackground
+        source={require('../../../../assets/images/IELTS-background-auth.jpg')}
+        resizeMode="cover"
+        style={AuthStyles.imageBackground}
+      />
       <View style={AuthStyles.box}>
         <Text style={AuthStyles.title}>Login</Text>
         <TextInput
@@ -64,7 +72,18 @@ export const LoginScreen = ({ navigation }: any) => {
           }
           iconPosition="right"
         />
-        <Button onPress={onLogin} title={isLoading ? 'Loading' : 'Login'} disabled={isLoading} />
+        <OpenURLButton
+          customStyle={{
+            textAlign: 'right',
+            color: '#FFFFFF',
+            textDecorationLine: 'underline',
+          }}
+          url="https://ielts.lampnm.com/register"
+          text="Don't have account ?"
+        />
+        <View style={AuthStyles.button}>
+          <Button onPress={onLogin} title={isLoading ? 'Loading' : 'Login'} disabled={isLoading} />
+        </View>
       </View>
     </View>
   )
