@@ -66,3 +66,8 @@ export const LIST_RESOURCE: ListResource[] = [
     title: 'Grammar',
   },
 ]
+
+export const DEVICES = {
+  MOBILE: 'mobile',
+  WEB: 'web',
+}

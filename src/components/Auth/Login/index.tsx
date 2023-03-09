@@ -8,6 +8,7 @@ import { login } from 'utils/api'
 import Input from 'common/InputPassword'
 import { AuthStyles } from 'style/auth'
 import { OpenURLButton } from 'common/OpenURLButton'
+import { LoginScreenProps } from 'models/common'
 
 export const LoginScreen = ({ navigation }: any) => {
   const [isHidePassword, setIsHidePassword] = useState(true)

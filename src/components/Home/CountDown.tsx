@@ -5,7 +5,7 @@ import { StyleSheet, Text, View } from 'react-native'
 
 dayjs.extend(utc)
 
-const EXPIRE_DAY = 1676868354
+const EXPIRE_DAY = 1678460928
 
 export const CountDown = () => {
   const [flashSaleTime, setFlashSaleTime] = useState({

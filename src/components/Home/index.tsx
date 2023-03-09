@@ -1,34 +1,42 @@
+import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { Header } from 'common/Header'
 import { Slide } from 'common/Slide'
 import { ScrollView, Text, TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import IconIon from 'react-native-vector-icons/Ionicons'
-import { HomeStyles } from 'style/home'
-import { ListResource, LIST_RESOURCE, WIDTH } from 'utils/common'
 import { useDataLoginInfoStore } from 'zustand/index '
 import { CountDown } from './CountDown'
+import { ListResource, LIST_RESOURCE, WIDTH, HEIGHT } from 'utils/common'
+import { HomeStyles } from 'style/home'
+import { NewsList } from './NewsList'
+
+const IMAGE = [
+  {
+    id: 1,
+    name: 'Image 1',
+    url: 'https://res.edu.vn/wp-content/uploads/2021/02/ielts-la-gi.jpg',
+  },
+  {
+    id: 2,
+    name: 'Image 2',
+    url: 'https://cdnmedia.baotintuc.vn/Upload/gYJXHsn6VBCJnSv7rj8xYQ/files/2022/11/ielts.jpg',
+  },
+  {
+    id: 3,
+    name: 'Image 3',
+    url: 'https://vcdn1-vnexpress.vnecdn.net/2022/11/12/du-hoc1-6028-1668240303.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=AsZPgZGGXTU3joox4MzmPw',
+  },
+]
 
 export const HomeScreen = ({ navigation }: any) => {
   const [setUserInfo] = useDataLoginInfoStore((state: any) => [state.setUserInfo])
 
-  const IMAGE = [
-    {
-      id: 1,
-      name: 'Image 1',
-      url: 'https://res.edu.vn/wp-content/uploads/2021/02/ielts-la-gi.jpg',
-    },
-    {
-      id: 2,
-      name: 'Image 2',
-      url: 'https://cdnmedia.baotintuc.vn/Upload/gYJXHsn6VBCJnSv7rj8xYQ/files/2022/11/ielts.jpg',
-    },
-    {
-      id: 3,
-      name: 'Image 3',
-      url: 'https://vcdn1-vnexpress.vnecdn.net/2022/11/12/du-hoc1-6028-1668240303.jpg?w=680&h=0&q=100&dpr=1&fit=crop&s=AsZPgZGGXTU3joox4MzmPw',
-    },
-  ]
+  const onSwitchNewsDetailScreen = (id: string) => {
+    navigation.navigate('News', {
+      newsId: id,
+    })
+  }
 
   return (
     <SafeAreaView>
@@ -47,7 +55,7 @@ export const HomeScreen = ({ navigation }: any) => {
           <CountDown />
         </View>
       </View>
-      <ScrollView style={{ width: WIDTH }}>
+      <ScrollView style={{ width: WIDTH, height: HEIGHT * 0.73 }}>
         <View style={HomeStyles.dictionary}>
           <Text style={HomeStyles.dictionaryTitle}>Dictionary</Text>
           <View style={HomeStyles.searchDictionary}>
@@ -80,6 +88,7 @@ export const HomeScreen = ({ navigation }: any) => {
             </View>
           ))}
         </View>
+        <NewsList onSwitchNewsDetailScreen={onSwitchNewsDetailScreen} />
       </ScrollView>
     </SafeAreaView>
   )
