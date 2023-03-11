@@ -1,10 +1,11 @@
 import { HomeScreen } from 'components/Home'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { NewsScreen } from 'components/News'
 
 const Tab = createBottomTabNavigator()
 
-export const PrivateLayout = () => {
+export const AppTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -23,6 +24,8 @@ export const PrivateLayout = () => {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+      <Tab.Screen name="News" component={NewsScreen} options={{ headerShown: false }} />
+
     </Tab.Navigator>
   )
 }

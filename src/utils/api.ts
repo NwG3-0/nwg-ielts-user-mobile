@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { USER_INFO } from 'models/api'
 import { DEVICES } from './common'
 
-export const _API_BASE_URL = 'http://192.168.55.107:4000'
+export const _API_BASE_URL = 'http://192.168.0.105:4000'
 
 export const isLogin = async () => {
   console.log(await AsyncStorage.getItem(USER_INFO))

@@ -36,6 +36,7 @@ export const Slide = ({ image }: any) => {
         ref={ref}
         onScroll={({ nativeEvent }) => onChange(nativeEvent)}
         showsHorizontalScrollIndicator={false}
+        scrollEventThrottle={5}
         pagingEnabled
         horizontal
         style={styles.wrap}

@@ -15,7 +15,7 @@ export const NewsList = ({ onSwitchNewsDetailScreen }: { onSwitchNewsDetailScree
     async () => {
       try {
         const { data, success } = await getNewsList({ limit, page, keyword })
-
+        console.log(data)
         return data
       } catch (error) {
         console.log(error)

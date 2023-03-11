@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
-import { PrivateLayout } from 'layouts/PrivateLayout'
+import { PrivateLayout } from 'layouts/PrivateLayout/PrivateLayout'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { USER_INFO } from 'models/api'
@@ -10,9 +10,9 @@ import { LoginScreen } from 'components/Auth/Login'
 import { NewsScreen } from 'components/News'
 
 const Stack = createNativeStackNavigator()
-
+const queryClient = new QueryClient()
 const App = () => {
-  const queryClient = new QueryClient()
+  
   const [userInfo, setUserInfo] = useDataLoginInfoStore((state: any) => [state.userInfo, state.setUserInfo])
 
   const loadStorageData = async (): Promise<void> => {
@@ -42,8 +42,7 @@ const App = () => {
             </>
           ) : (
             <>
-              <Stack.Screen name="PrivateLayout" component={PrivateLayout} />
-              <Stack.Screen name="News" component={NewsScreen} />
+              <Stack.Screen name="PrivateLayout" component={PrivateLayout} />       
             </>
           )}
         </Stack.Navigator>
