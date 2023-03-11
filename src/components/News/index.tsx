@@ -77,7 +77,8 @@ export const NewsScreen = ({ route, navigation }: NewsScreenProps) => {
             </ScrollView>
           </View>
         )}
-        <CommonModal open={modalVisible} setOpen={setModalVisible} data={pickedWord}/>
+        <View style={{backgroundColor:'rgba:0,0,0,0.8',height:'100%'}}>
+        <CommonModal open={modalVisible} setOpen={setModalVisible} data={pickedWord}/></View>
       </View>
     </SafeAreaView>
   )

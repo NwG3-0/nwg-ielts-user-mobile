@@ -12,6 +12,7 @@ function CommonModal({open,setOpen,data}:CommonModalProps) {
     animationType="slide"
     transparent={true}
     visible={open}
+    
     onRequestClose={() => {
       Alert.alert('Modal has been closed.');
       setOpen(false);
@@ -35,8 +36,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 22,
-    elevation:30,
-    zIndex:30
+    backgroundColor:'rgba(0,0,0,0.6)'
   },
   modalView: {
     margin: 20,
