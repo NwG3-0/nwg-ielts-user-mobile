@@ -1,5 +1,5 @@
 import { Header } from 'common/Header'
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import { NewsScreenProps } from 'models/common'
 import { Image, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
 import { useQuery } from '@tanstack/react-query'
@@ -12,8 +12,9 @@ import { images } from '../../images'
 import CommonModal from 'common/Modal/Modal'
 export const NewsScreen = ({ route, navigation }: NewsScreenProps) => {
   const { newsId } = route.params
-  const [modalVisible,setModalVisible] = useState<boolean>(false)
-  const [pickedWord,setPickedWord] = useState('')
+  const [modalVisible, setModalVisible] = useState<boolean>(false)
+  const [pickedWord, setPickedWord] = useState<string>('')
+
   const { data: news_detail, isLoading } = useQuery(
     [QUERY_KEYS.NEWS_DETAIL, newsId],
     async () => {
@@ -33,7 +34,7 @@ export const NewsScreen = ({ route, navigation }: NewsScreenProps) => {
       refetchOnWindowFocus: false,
     },
   )
-  // console.log(news_detail?.Content)
+
   return (
     <SafeAreaView>
       <Header />
@@ -58,16 +59,14 @@ export const NewsScreen = ({ route, navigation }: NewsScreenProps) => {
               <Image source={{ uri: news_detail.Image }} style={{ width: '100%', height: 300 }} />
               <Text style={{ fontSize: 24, fontWeight: '600', textAlign: 'center' }}>{news_detail.Title}</Text>
               <Text style={{ fontSize: 20, paddingHorizontal: 10 }}>
-                {news_detail.Content.map((item:any, id:any) => {
+                {news_detail.Content.map((item: any, id: any) => {
                   return (
                     <Pressable
                       onPress={() => {
-                       
-                        setPickedWord(item);
+                        setPickedWord(item)
                         setModalVisible(!modalVisible)
                       }}
                       key={id}
-                      
                     >
                       <Text>{item} </Text>
                     </Pressable>
@@ -77,8 +76,9 @@ export const NewsScreen = ({ route, navigation }: NewsScreenProps) => {
             </ScrollView>
           </View>
         )}
-        <View style={{backgroundColor:'rgba:0,0,0,0.8',height:'100%'}}>
-        <CommonModal open={modalVisible} setOpen={setModalVisible} data={pickedWord}/></View>
+        <View style={{ backgroundColor: 'rgba:0,0,0,0.8', height: '100%' }}>
+          <CommonModal open={modalVisible} setOpen={setModalVisible} word={pickedWord} />
+        </View>
       </View>
     </SafeAreaView>
   )

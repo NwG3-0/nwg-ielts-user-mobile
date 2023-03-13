@@ -1,33 +1,58 @@
-import React, {useState} from 'react';
-import {Alert, Modal, StyleSheet, Text, Pressable, View} from 'react-native';
-interface CommonModalProps{
-  open: boolean,
-  setOpen: Function,
-  data: string
+import { useQuery } from '@tanstack/react-query'
+import React, { useState } from 'react'
+import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native'
+import { getDictionary } from 'utils/dictionary'
+import { QUERY_KEYS } from 'utils/keys'
+interface CommonModalProps {
+  open: boolean
+  setOpen: Function
+  word: string
 }
-function CommonModal({open,setOpen,data}:CommonModalProps) {
-  console.log(data)
+function CommonModal({ open, setOpen, word }: CommonModalProps) {
+  const { data: wordDetail, isLoading: isLoadingWord } = useQuery(
+    [QUERY_KEYS.WORD, word],
+    async () => {
+      try {
+        const response = await getDictionary(word)
+
+        return response[0]
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    {
+      refetchInterval: false,
+      enabled: word !== '',
+      refetchOnWindowFocus: false,
+    },
+  )
+
   return (
     <Modal
-    animationType="slide"
-    transparent={true}
-    visible={open}
-    
-    onRequestClose={() => {
-      Alert.alert('Modal has been closed.');
-      setOpen(false);
-    }}>
-    <View style={styles.centeredView}>
-      <View style={styles.modalView}>
-        <Text style={styles.modalText}>{data}</Text>
-        <Pressable
-          style={[styles.button, styles.buttonClose]}
-          onPress={() => setOpen(false)}>
-          <Text style={styles.textStyle}>Hide Modal</Text>
-        </Pressable>
+      animationType="slide"
+      transparent={true}
+      visible={open}
+      onRequestClose={() => {
+        Alert.alert('Modal has been closed.')
+        setOpen(false)
+      }}
+    >
+      <View style={styles.centeredView}>
+        <View style={styles.modalView}>
+          {isLoadingWord && !wordDetail ? (
+            <Text>Loading ...</Text>
+          ) : (
+            <>
+              <Text style={styles.modalText}>{word}</Text>
+              <Text>{wordDetail?.phonetics[0]?.text}</Text>
+              <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setOpen(false)}>
+                <Text style={styles.textStyle}>Hide Modal</Text>
+              </Pressable>
+            </>
+          )}
+        </View>
       </View>
-    </View>
-  </Modal>
+    </Modal>
   )
 }
 const styles = StyleSheet.create({
@@ -36,7 +61,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 22,
-    backgroundColor:'rgba(0,0,0,0.6)'
+    backgroundColor: 'rgba(0,0,0,0.6)',
   },
   modalView: {
     margin: 20,
@@ -73,5 +98,5 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: 'center',
   },
-});
+})
 export default CommonModal

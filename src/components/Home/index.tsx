@@ -1,4 +1,3 @@
-import { NavigationProp, useNavigation } from '@react-navigation/native'
 import { Header } from 'common/Header'
 import { Slide } from 'common/Slide'
 import { ScrollView, Text, TextInput, View } from 'react-native'
