@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import React, { useState } from 'react'
-import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native'
+import { Alert, Modal, StyleSheet, Text, Pressable, View, ScrollView } from 'react-native'
 import { getDictionary } from 'utils/dictionary'
 import { QUERY_KEYS } from 'utils/keys'
 import Icon from 'react-native-vector-icons/FontAwesome'
@@ -46,7 +46,7 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
     sourceUrls: ['https://en.wiktionary.org/wiki/unite', 'https://en.wiktionary.org/wiki/united'],
     word: 'united',
   }
-  console.log(wordDetail?.meanings)
+  // console.log(wordDetail?.phonetic)
   return (
     <Modal
       transparent={true}
@@ -61,20 +61,39 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
           {isLoadingWord && !wordDetail ? (
             <Text>Loading ...</Text>
           ) : (
-            <View style={{ width: '100%' }}>
+            <ScrollView style={{width:'100%'}}>
               <View style={styles.meaningContainer}>
-                <Text style={styles.title}>Meanings:</Text>
+                <Text style={styles.title}>{word}</Text>
                 <Pressable onPress={() => setOpen(false)}>
                   <Icon name="close" style={styles.closeIcon} />
                 </Pressable>
               </View>
-              <View style={styles.meaningContainer}>
-                <Text style={styles.modalText}>{word}</Text>
+              {wordDetail?.phonetic && (
+                <View style={{ flexDirection: 'row', marginTop: 8,alignSelf:'flex-start' }}>
+                  <Text style={styles.meaningSubtitle}>Spelling: </Text>
+                  <Text>{wordDetail?.phonetic}</Text>
+                </View>
+              )}
+              <View style={{ flexDirection: 'row', marginTop: 8, alignSelf:'flex-start' }}>
+                <Text style={styles.meaningSubtitle}>Definitions: </Text>
+                {wordDetail?.phonetic && <Text>{wordDetail?.phonetic}</Text>}
               </View>
+              
+              {wordDetail?.meanings?.map((item: any, id: any) => {
+            
+                return (
+                  <View style={{  marginTop: 8 }} key={id}>
+                    <Text style={[styles.meaningSubtitle,{fontSize:14}]}>{item.partOfSpeech}: </Text>
 
-              <Text>{wordDetail?.phonetics[0]?.text}</Text>
-            </View>
+                    {item?.definitions?.map((it: any, idx: any) => {
+                      return (<Text style={{marginTop:5}}>- {it.definition}</Text>)
+                    })}
+                  </View>
+                )
+              })}
+            </ScrollView>
           )}
+          
         </View>
       </View>
     </Modal>
@@ -94,7 +113,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 20,
     paddingHorizontal: 17,
-    width: '100%',
+    width:'100%',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -127,14 +146,21 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    width:'100%'
   },
   title: {
     fontSize: 18,
     fontWeight: '700',
+    textTransform: 'capitalize',
   },
   closeIcon: {
     fontSize: 18,
     color: '#6B6B6B',
+  },
+  meaningSubtitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    textTransform: 'capitalize',
   },
 })
 export default CommonModal
