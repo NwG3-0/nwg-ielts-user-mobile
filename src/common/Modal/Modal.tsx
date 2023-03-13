@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { Alert, Modal, StyleSheet, Text, Pressable, View } from 'react-native'
 import { getDictionary } from 'utils/dictionary'
 import { QUERY_KEYS } from 'utils/keys'
+import Icon from 'react-native-vector-icons/FontAwesome'
 interface CommonModalProps {
   open: boolean
   setOpen: Function
@@ -26,10 +27,28 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
       refetchOnWindowFocus: false,
     },
   )
-
+  const object = {
+    license: { name: 'CC BY-SA 3.0', url: 'https://creativecommons.org/licenses/by-sa/3.0' },
+    meanings: [
+      { antonyms: [Array], definitions: [Array], partOfSpeech: 'verb', synonyms: [Array] },
+      { antonyms: [Array], definitions: [Array], partOfSpeech: 'adjective', synonyms: [Array] },
+    ],
+    phonetic: '/juːˈnaɪtɪd/',
+    phonetics: [
+      { audio: '', text: '/juːˈnaɪtɪd/' },
+      {
+        audio: 'https://api.dictionaryapi.dev/media/pronunciations/en/united-us.mp3',
+        license: [Object],
+        sourceUrl: 'https://commons.wikimedia.org/w/index.php?curid=1227485',
+        text: '/juˈnaɪtɪd/',
+      },
+    ],
+    sourceUrls: ['https://en.wiktionary.org/wiki/unite', 'https://en.wiktionary.org/wiki/united'],
+    word: 'united',
+  }
+  console.log(wordDetail?.meanings)
   return (
     <Modal
-      animationType="slide"
       transparent={true}
       visible={open}
       onRequestClose={() => {
@@ -42,13 +61,19 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
           {isLoadingWord && !wordDetail ? (
             <Text>Loading ...</Text>
           ) : (
-            <>
-              <Text style={styles.modalText}>{word}</Text>
+            <View style={{ width: '100%' }}>
+              <View style={styles.meaningContainer}>
+                <Text style={styles.title}>Meanings:</Text>
+                <Pressable onPress={() => setOpen(false)}>
+                  <Icon name="close" style={styles.closeIcon} />
+                </Pressable>
+              </View>
+              <View style={styles.meaningContainer}>
+                <Text style={styles.modalText}>{word}</Text>
+              </View>
+
               <Text>{wordDetail?.phonetics[0]?.text}</Text>
-              <Pressable style={[styles.button, styles.buttonClose]} onPress={() => setOpen(false)}>
-                <Text style={styles.textStyle}>Hide Modal</Text>
-              </Pressable>
-            </>
+            </View>
           )}
         </View>
       </View>
@@ -61,13 +86,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginTop: 22,
+    paddingHorizontal: 32,
     backgroundColor: 'rgba(0,0,0,0.6)',
   },
   modalView: {
-    margin: 20,
     backgroundColor: 'white',
     borderRadius: 20,
-    padding: 35,
+    paddingVertical: 20,
+    paddingHorizontal: 17,
+    width: '100%',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -86,9 +113,7 @@ const styles = StyleSheet.create({
   buttonOpen: {
     backgroundColor: '#F194FF',
   },
-  buttonClose: {
-    backgroundColor: '#2196F3',
-  },
+
   textStyle: {
     color: 'white',
     fontWeight: 'bold',
@@ -97,6 +122,19 @@ const styles = StyleSheet.create({
   modalText: {
     marginBottom: 15,
     textAlign: 'center',
+  },
+  meaningContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 18,
+    fontWeight: '700',
+  },
+  closeIcon: {
+    fontSize: 18,
+    color: '#6B6B6B',
   },
 })
 export default CommonModal
