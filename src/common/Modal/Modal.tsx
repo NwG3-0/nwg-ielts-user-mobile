@@ -76,7 +76,6 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
               )}
               <View style={{ flexDirection: 'row', marginTop: 8, alignSelf:'flex-start' }}>
                 <Text style={styles.meaningSubtitle}>Definitions: </Text>
-                {wordDetail?.phonetic && <Text>{wordDetail?.phonetic}</Text>}
               </View>
               
               {wordDetail?.meanings?.map((item: any, id: any) => {
