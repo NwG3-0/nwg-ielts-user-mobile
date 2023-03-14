@@ -1,15 +1,18 @@
 import { useQuery } from '@tanstack/react-query'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Alert, Modal, StyleSheet, Text, Pressable, View, ScrollView } from 'react-native'
 import { getDictionary } from 'utils/dictionary'
 import { QUERY_KEYS } from 'utils/keys'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from 'expo-av'
 interface CommonModalProps {
   open: boolean
   setOpen: Function
   word: string
 }
 function CommonModal({ open, setOpen, word }: CommonModalProps) {
+  const sound = useRef(new Audio.Sound())
+  const [playing, setPlaying] = useState(false)
   const { data: wordDetail, isLoading: isLoadingWord } = useQuery(
     [QUERY_KEYS.WORD, word],
     async () => {
@@ -46,7 +49,30 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
     sourceUrls: ['https://en.wiktionary.org/wiki/unite', 'https://en.wiktionary.org/wiki/united'],
     word: 'united',
   }
-  // console.log(wordDetail?.phonetic)
+
+  useEffect(() => {
+    Audio.setAudioModeAsync({
+      allowsRecordingIOS: false,
+      interruptionModeAndroid: InterruptionModeAndroid.DuckOthers,
+      interruptionModeIOS: InterruptionModeIOS.DoNotMix,
+      shouldDuckAndroid: true,
+      playsInSilentModeIOS: true,
+      playThroughEarpieceAndroid: false,
+    })
+    const LoadAudio = async () => {
+      await sound.current.loadAsync({ uri: 'https://api.dictionaryapi.dev/media/pronunciations/en/been-us.mp3' })
+    }
+    LoadAudio()
+  }, [])
+
+  const PlayAudio = async () => {
+    try {
+      await sound.current.playAsync()
+      await sound.current.replayAsync()
+    } catch (error) {
+      console.log('There was an error')
+    }
+  }
   return (
     <Modal
       transparent={true}
@@ -61,38 +87,46 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
           {isLoadingWord && !wordDetail ? (
             <Text>Loading ...</Text>
           ) : (
-            <ScrollView style={{width:'100%'}}>
+            <ScrollView style={{ width: '100%' }}>
               <View style={styles.meaningContainer}>
-                <Text style={styles.title}>{word}</Text>
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <Text style={styles.title}>{word}</Text>
+                  <Pressable onPress={() => PlayAudio()}>
+                    <Icon name="volume-up" style={{ marginLeft: 8, fontSize: 14 }} />
+                  </Pressable>
+                </View>
+
                 <Pressable onPress={() => setOpen(false)}>
                   <Icon name="close" style={styles.closeIcon} />
                 </Pressable>
               </View>
-              {wordDetail?.phonetic && (
-                <View style={{ flexDirection: 'row', marginTop: 8,alignSelf:'flex-start' }}>
-                  <Text style={styles.meaningSubtitle}>Spelling: </Text>
-                  <Text>{wordDetail?.phonetic}</Text>
-                </View>
-              )}
-              <View style={{ flexDirection: 'row', marginTop: 8, alignSelf:'flex-start' }}>
+              {/* {wordDetail?.phonetic && ( */}
+              <View style={{ flexDirection: 'row', marginTop: 8, alignSelf: 'flex-start' }}>
+                <Text style={styles.meaningSubtitle}>Spelling: </Text>
+                <Text>{wordDetail?.phonetic}</Text>
+              </View>
+              {/* )} */}
+              <View style={{ flexDirection: 'row', marginTop: 8, alignSelf: 'flex-start' }}>
                 <Text style={styles.meaningSubtitle}>Definitions: </Text>
               </View>
-              
+
               {wordDetail?.meanings?.map((item: any, id: any) => {
-            
                 return (
-                  <View style={{  marginTop: 8 }} key={id}>
-                    <Text style={[styles.meaningSubtitle,{fontSize:14}]}>{item.partOfSpeech}: </Text>
+                  <View style={{ marginTop: 8 }} key={id}>
+                    <Text style={[styles.meaningSubtitle, { fontSize: 14 }]}>{item.partOfSpeech}: </Text>
 
                     {item?.definitions?.map((it: any, idx: any) => {
-                      return (<Text style={{marginTop:5}}>- {it.definition}</Text>)
+                      return (
+                        <Text style={{ marginTop: 5 }} key={idx}>
+                          - {it.definition}
+                        </Text>
+                      )
                     })}
                   </View>
                 )
               })}
             </ScrollView>
           )}
-          
         </View>
       </View>
     </Modal>
@@ -112,7 +146,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 20,
     paddingHorizontal: 17,
-    width:'100%',
+    width: '100%',
     alignItems: 'center',
     shadowColor: '#000',
     shadowOffset: {
@@ -145,7 +179,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    width:'100%'
+    width: '100%',
   },
   title: {
     fontSize: 18,

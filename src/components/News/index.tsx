@@ -1,7 +1,7 @@
 import { Header } from 'common/Header'
 import React, { useState } from 'react'
 import { NewsScreenProps } from 'models/common'
-import { Image, Pressable, ScrollView, Text, TouchableOpacity, View } from 'react-native'
+import { Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useQuery } from '@tanstack/react-query'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { getNewsDetail } from 'utils/api'
@@ -39,47 +39,54 @@ export const NewsScreen = ({ route, navigation }: NewsScreenProps) => {
     <SafeAreaView>
       <Header />
       {isLoading && <Text>Loading ...</Text>}
-      <View>
-        {news_detail && (
-          <View style={{ width: WIDTH, paddingTop: 20 }}>
-            <TouchableOpacity
-              style={{
-                display: 'flex',
-                flexDirection: 'row',
-                alignItems: 'center',
-              }}
-              onPress={() => {
-                navigation.goBack()
-              }}
-            >
-              <IconIon name="arrow-back" size={24} color="#000" />
-              <Text style={{ fontSize: 18, marginLeft: 5 }}>Back to Home</Text>
-            </TouchableOpacity>
-            <ScrollView style={{ width: WIDTH, marginTop: 10, height: HEIGHT - 130 }}>
-              <Image source={{ uri: news_detail.Image }} style={{ width: '100%', height: 300 }} />
-              <Text style={{ fontSize: 24, fontWeight: '600', textAlign: 'center' }}>{news_detail.Title}</Text>
-              <Text style={{ fontSize: 20, paddingHorizontal: 10 }}>
-                {news_detail.Content.map((item: any, id: any) => {
-                  return (
-                    <Pressable
-                      onPress={() => {
-                        setPickedWord(item)
-                        setModalVisible(!modalVisible)
-                      }}
-                      key={id}
-                    >
-                      <Text>{item} </Text>
-                    </Pressable>
-                  )
-                })}
-              </Text>
-            </ScrollView>
-          </View>
-        )}
-        <View style={{ backgroundColor: 'rgba:0,0,0,0.8', height: '100%' }}>
-          <CommonModal open={modalVisible} setOpen={setModalVisible} word={pickedWord} />
+
+      {news_detail && (
+        <View style={{ paddingHorizontal: 16, paddingTop: 20 }}>
+          <TouchableOpacity
+            style={{
+              display: 'flex',
+              flexDirection: 'row',
+              alignItems: 'center',
+            }}
+            onPress={() => {
+              navigation.goBack()
+            }}
+          >
+            <IconIon name="arrow-back" size={24} color="#000" />
+            <Text style={{ fontSize: 18, marginLeft: 5 }}>Back to Home</Text>
+          </TouchableOpacity>
+          <ScrollView style={{ paddingHorizontal: 7, marginTop: 18, height: HEIGHT - 130 }}>
+            <Image source={{ uri: news_detail.Image }} style={{ width: '100%', height: 300 }} />
+            <Text style={{ marginVertical: 20, fontSize: 24, fontWeight: '600', textAlign: 'center' }}>
+              {news_detail.Title}
+            </Text>
+            <Text style={{ fontSize: 20 }}>
+              {news_detail.Content.map((item: any, id: any) => {
+                return (
+                  <Pressable
+                    onPress={() => {
+                      setPickedWord(item)
+                      setModalVisible(!modalVisible)
+                    }}
+                    key={id}
+                  >
+                    <Text>{item} </Text>
+                  </Pressable>
+                )
+              })}
+            </Text>
+          </ScrollView>
         </View>
+      )}
+      <View style={{ backgroundColor: 'rgba:0,0,0,0.8', height: '100%' }}>
+        <CommonModal open={modalVisible} setOpen={setModalVisible} word={pickedWord} />
       </View>
     </SafeAreaView>
   )
 }
+const styles = StyleSheet.create({
+  container: {
+    width: '100%',
+    paddingHorizontal: 30,
+  },
+})
