@@ -1,7 +1,7 @@
 import { HomeScreen } from 'components/Home'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/FontAwesome'
-import { NewsScreen } from 'components/News'
+import { News } from 'components/News/News'
 
 const Tab = createBottomTabNavigator()
 
@@ -24,8 +24,7 @@ export const AppTabs = () => {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
-      <Tab.Screen name="News" component={NewsScreen} options={{ headerShown: false }} />
-
+      <Tab.Screen name="News" component={News} options={{ headerShown: false }} />
     </Tab.Navigator>
   )
 }

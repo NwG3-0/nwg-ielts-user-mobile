@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { USER_INFO } from 'models/api'
 import { DEVICES } from './common'
 
-export const _API_BASE_URL = 'http://192.168.55.103:4000'
+export const _API_BASE_URL = 'http://10.31.0.37:4000'
 
 export const isLogin = async () => {
   console.log(await AsyncStorage.getItem(USER_INFO))
@@ -35,14 +35,16 @@ export const login = async ({ email, password }: { email: string; password: stri
   }
 }
 
-export const getNewsList = async (input: { limit: number; page: number; keyword: string }) => {
+export const getNewsList = async (input: { limit: number; page: number; keyword: string,type:string,startDate:string,endDate:string }) => {
   try {
     const limit = input.limit ?? 10
     const page = input.page ?? 1
     const keyword = input.keyword ?? ''
-
+    const type = input.type
+    const startDate= input.startDate
+    const endDate=input.endDate
     const response = await fetch(
-      `${_API_BASE_URL}/api/news?limit=${limit}&page=${page}&keyword=${keyword}&device=${DEVICES.MOBILE}`,
+      `${_API_BASE_URL}/api/news-type?limit=${limit}&page=${page}&keyword=${keyword}&device=${DEVICES.MOBILE}&type=${type}&startDate=${startDate}&endDate=${endDate}`,
       {
         method: 'GET',
         headers: {

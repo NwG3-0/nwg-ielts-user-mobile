@@ -7,12 +7,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { USER_INFO } from 'models/api'
 import { useDataLoginInfoStore } from 'zustand/index '
 import { LoginScreen } from 'components/Auth/Login'
-import { NewsScreen } from 'components/News'
+import { NewsScreen } from 'components/News/NewDetails'
 
 const Stack = createNativeStackNavigator()
 const queryClient = new QueryClient()
 const App = () => {
-  
   const [userInfo, setUserInfo] = useDataLoginInfoStore((state: any) => [state.userInfo, state.setUserInfo])
 
   const loadStorageData = async (): Promise<void> => {
@@ -42,7 +41,7 @@ const App = () => {
             </>
           ) : (
             <>
-              <Stack.Screen name="PrivateLayout" component={PrivateLayout} />       
+              <Stack.Screen name="PrivateLayout" component={PrivateLayout} />
             </>
           )}
         </Stack.Navigator>

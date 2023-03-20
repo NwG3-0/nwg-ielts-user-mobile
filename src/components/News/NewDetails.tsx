@@ -10,7 +10,7 @@ import IconIon from 'react-native-vector-icons/Ionicons'
 import { HEIGHT, WIDTH } from 'utils/common'
 import { images } from '../../images'
 import CommonModal from 'common/Modal/Modal'
-export const NewsScreen = ({ route, navigation }: NewsScreenProps) => {
+export const NewDetails = ({ route, navigation }: NewsScreenProps) => {
   const { newsId } = route.params
   const [modalVisible, setModalVisible] = useState<boolean>(false)
   const [pickedWord, setPickedWord] = useState<string>('')

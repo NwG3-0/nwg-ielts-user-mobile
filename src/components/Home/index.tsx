@@ -1,6 +1,6 @@
 import { Header } from 'common/Header'
 import { Slide } from 'common/Slide'
-import { ScrollView, Text, TextInput, View } from 'react-native'
+import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import IconIon from 'react-native-vector-icons/Ionicons'
@@ -8,7 +8,6 @@ import { useDataLoginInfoStore } from 'zustand/index '
 import { CountDown } from './CountDown'
 import { ListResource, LIST_RESOURCE, WIDTH, HEIGHT } from 'utils/common'
 import { HomeStyles } from 'style/home'
-import { NewsList } from './NewsList'
 
 const IMAGE = [
   {
@@ -32,9 +31,7 @@ export const HomeScreen = ({ navigation }: any) => {
   const [setUserInfo] = useDataLoginInfoStore((state: any) => [state.setUserInfo])
 
   const onSwitchNewsDetailScreen = (id: string) => {
-    navigation.navigate('News', {
-      newsId: id,
-    })
+    navigation.navigate('News')
   }
 
   return (
@@ -69,25 +66,25 @@ export const HomeScreen = ({ navigation }: any) => {
         </View>
         <View style={{ width: WIDTH, flexWrap: 'wrap', display: 'flex', flexDirection: 'row', paddingHorizontal: 20 }}>
           {LIST_RESOURCE.map((item: ListResource) => (
-            <View
-              key={item.id}
-              style={{
-                width: (WIDTH - 40) / 5,
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                marginTop: 20,
-              }}
-            >
-              <View style={{ padding: 8, borderRadius: 6, backgroundColor: item.color }}>
-                <IconIon name={item.icon} color="#FFFFFF" size={26} />
+            <Pressable onPress={() => navigation.navigate(item.title)} key={item.id}>
+              <View
+                style={{
+                  width: (WIDTH - 40) / 5,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginTop: 20,
+                }}
+              >
+                <View style={{ padding: 8, borderRadius: 6, backgroundColor: item.color }}>
+                  <IconIon name={item.icon} color="#FFFFFF" size={26} />
+                </View>
+                <Text style={{ marginTop: 6, fontSize: 13 }}>{item.title}</Text>
               </View>
-              <Text style={{ marginTop: 6, fontSize: 13 }}>{item.title}</Text>
-            </View>
+            </Pressable>
           ))}
         </View>
-        <NewsList onSwitchNewsDetailScreen={onSwitchNewsDetailScreen} />
       </ScrollView>
     </SafeAreaView>
   )
