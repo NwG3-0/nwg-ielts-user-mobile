@@ -1,44 +1,55 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
 import { useQuery } from '@tanstack/react-query'
 import { QUERY_KEYS } from 'utils/keys'
 import { getNewsList } from 'utils/api'
 import { WIDTH } from 'utils/common'
-import moment from 'moment'
-import DateRangePicker from 'react-native-daterange-picker'
+import { DatePickerModal } from 'react-native-paper-dates'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Header } from 'common/Header'
+import { enGB, registerTranslation } from 'react-native-paper-dates'
+import dayjs from 'dayjs'
+
 export const News = () => {
   const [limit] = useState<number>(5)
   const [page] = useState<number>(1)
   const [keyword, setKeyword] = useState<string>('')
   const [type, setType] = useState<string>('')
-  const [date, setDate] = useState()
+  const [range, setRange] = useState<any>({ startDate: '', endDate: '' })
 
-  const [openCalendar, setOpenCalendar] = useState<boolean>(false)
-  // const { data: news, isLoading: isNewsLoading } = useQuery(
-  //   [QUERY_KEYS.NEWS_LIST, limit, page, keyword, type, startDate, endDate],
-  //   async () => {
-  //     try {
-  //       const { data, success } = await getNewsList({ limit, page, keyword, type, startDate, endDate })
-  //       console.log(data)
-  //       return data
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   },
-  //   {
-  //     refetchInterval: false,
-  //     refetchOnWindowFocus: false,
-  //   },
-  // )
-  // const handlePickDate = (day: any) => {
-  //   if (startDate == '') {
-  //     setStartDate(day.dateString)
-  //   } else if (startDate !== '') {
-  //     setEndDate(day.dateString)
-  //   }
-  // }
+  const [open, setOpen] = useState(false)
+  var customParseFormat = require('dayjs/plugin/customParseFormat')
+  registerTranslation('en', enGB)
+  const onDismiss = useCallback(() => {
+    setOpen(false)
+  }, [setOpen])
+
+  const onConfirm = useCallback(
+    ({ start, end }: any) => {
+      setOpen(false)
+      let startDate = dayjs(start).format('DD/MM/YYYY')
+      let endDate = dayjs(end).format('DD/MM/YYYY')
+      setRange({ startDate, endDate })
+    },
+    [setOpen, setRange],
+  )
+  dayjs.extend(customParseFormat)
+  const { data: news, isLoading: isNewsLoading } = useQuery(
+    [QUERY_KEYS.NEWS_LIST, limit, page, keyword, type, range.startDate,range.endDate],
+    async () => {
+      try {
+        const { data, success } = await getNewsList({ limit, page, keyword, type, range.startDate, range.endDate })
+    
+        return data
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    {
+      refetchInterval: false,
+      refetchOnWindowFocus: false,
+    },
+  )
 
   return (
     <SafeAreaView>
@@ -52,6 +63,15 @@ export const News = () => {
           alignItems: 'center',
         }}
       >
+        <DatePickerModal
+          locale="en"
+          mode="range"
+          visible={open}
+          onDismiss={onDismiss}
+          startDate={range.startDate}
+          endDate={range.endDate}
+          onConfirm={onConfirm}
+        />
         <Text
           style={{
             width: WIDTH - 40,
@@ -67,7 +87,7 @@ export const News = () => {
           <TextInput
             placeholder="Pick a range date"
             // value={startDate + '-' + endDate}
-            onFocus={() => setOpenCalendar(true)}
+            onFocus={() => setOpen(true)}
           />
         </View>
         {/* {news &&
