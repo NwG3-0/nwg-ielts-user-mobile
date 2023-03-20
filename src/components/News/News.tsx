@@ -15,7 +15,7 @@ export const News = () => {
   const [page] = useState<number>(1)
   const [keyword, setKeyword] = useState<string>('')
   const [type, setType] = useState<string>('')
-  const [range, setRange] = useState<any>({ startDate: '', endDate: '' })
+  const [range, setRange] = useState<any>({ startDate: undefined, endDate: undefined })
 
   const [open, setOpen] = useState(false)
   var customParseFormat = require('dayjs/plugin/customParseFormat')
@@ -25,21 +25,21 @@ export const News = () => {
   }, [setOpen])
 
   const onConfirm = useCallback(
-    ({ start, end }: any) => {
+    ({ startDate, endDate }: any) => {
       setOpen(false)
-      let startDate = dayjs(start).format('DD/MM/YYYY')
-      let endDate = dayjs(end).format('DD/MM/YYYY')
+      // let startDate = dayjs(start).format('DD/MM/YYYY')
+      // let endDate = dayjs(end).format('DD/MM/YYYY')
       setRange({ startDate, endDate })
     },
     [setOpen, setRange],
   )
   dayjs.extend(customParseFormat)
   const { data: news, isLoading: isNewsLoading } = useQuery(
-    [QUERY_KEYS.NEWS_LIST, limit, page, keyword, type, range.startDate,range.endDate],
+    [QUERY_KEYS.NEWS_LIST, limit, page, keyword, type, range.startDate ,range.endDate],
     async () => {
       try {
-        const { data, success } = await getNewsList({ limit, page, keyword, type, range.startDate, range.endDate })
-    
+        const { data, success } = await getNewsList({ limit, page, keyword, type, startDate:range.startDate,endDate: range.endDate })
+    console.log(data)
         return data
       } catch (error) {
         console.log(error)

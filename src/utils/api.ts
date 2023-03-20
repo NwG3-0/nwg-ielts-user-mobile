@@ -35,7 +35,7 @@ export const login = async ({ email, password }: { email: string; password: stri
   }
 }
 
-export const getNewsList = async (input: { limit: number; page: number; keyword: string,type:string,startDate:string,endDate:string }) => {
+export const getNewsList = async (input: { limit: number; page: number; keyword: string;type:string; startDate:string; endDate:string }) => {
   try {
     const limit = input.limit ?? 10
     const page = input.page ?? 1
