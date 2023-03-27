@@ -1,3 +1,4 @@
+import { NEWS, NewsList } from 'models/common'
 import { Dimensions } from 'react-native'
 
 export const WIDTH = Dimensions.get('window').width
@@ -9,7 +10,44 @@ export interface ListResource {
   color: string
   title: string
 }
+export const NEWS_LIST: NewsList[] =[
+  {
+  
+    label: 'Sport',
+    value: NEWS.SPORT,
+  },
+  {
+ 
+    label: 'Business',
+    value: NEWS.BUSINESS,
+  },
+  {
+   
+    label: 'Education',
+    value: NEWS.EDUCATION,
+  },
+  {
+  
+    label: 'Entertainment',
+    value: NEWS.ENTERTAINMENT,
+  },
+  {
+   
+    label: 'Music',
+    value: NEWS.MUSIC,
+  },
+  {
+ 
+    label: 'Technology',
+    value: NEWS.TECHNOLOGY,
+  },
+  {
+   
+    label: 'Travel',
+    value: NEWS.TRAVEL,
+  },
 
+]
 export const LIST_RESOURCE: ListResource[] = [
   {
     id: 1,
