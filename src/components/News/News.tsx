@@ -35,11 +35,18 @@ export const News = () => {
   )
   dayjs.extend(customParseFormat)
   const { data: news, isLoading: isNewsLoading } = useQuery(
-    [QUERY_KEYS.NEWS_LIST, limit, page, keyword, type, range.startDate ,range.endDate],
+    [QUERY_KEYS.NEWS_LIST, limit, page, keyword, type, range.startDate, range.endDate],
     async () => {
       try {
-        const { data, success } = await getNewsList({ limit, page, keyword, type, startDate:range.startDate,endDate: range.endDate })
-    console.log(data)
+        const { data, success } = await getNewsList({
+          limit,
+          page,
+          keyword,
+          type,
+          startDate: range.startDate,
+          endDate: range.endDate,
+        })
+        console.log(data)
         return data
       } catch (error) {
         console.log(error)
@@ -50,6 +57,7 @@ export const News = () => {
       refetchOnWindowFocus: false,
     },
   )
+  console.log(range)
 
   return (
     <SafeAreaView>
