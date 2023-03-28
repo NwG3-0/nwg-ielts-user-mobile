@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { USER_INFO } from 'models/api'
 import { DEVICES } from './common'
 
-export const _API_BASE_URL='https://englishbe.lampnm.com'
+export const _API_BASE_URL='http://192.168.55.104:4000'
 
 export const isLogin = async () => {
   console.log(await AsyncStorage.getItem(USER_INFO))
@@ -57,7 +57,6 @@ export const getNewsList = async (input: { limit: number; page: number; keyword:
     const rawResponse = await response.json()
 
     if (rawResponse) {
-      console.log('raw',rawResponse)
       return rawResponse
     }
   } catch (error) {
@@ -105,27 +104,29 @@ export const checkNewViews = async (input: { newsId: string,userId:string }) => 
     })
 
     const rawResponse = await response.json()
-
-    if (rawResponse) {
+   
+    if (rawResponse) { 
       return rawResponse
     }
   } catch (error) {
     console.log(error)
   }
 }
-export const addNewViews = async (input: { newsId: string,userId:string }) => {
+export const addNewViews = async (input: { newsId: string,userId:string,accessToken:string }) => {
   try {
-    const { newsId,userId } = input
+    const { newsId,userId,accessToken } = input
 
     if (!newsId || newsId === '' || !userId || userId==='') {
       return { success: false, data: null, message: 'Invalid Id' }
     }
 
-    const response = await fetch(`${_API_BASE_URL}/api/view-news/create?newsId=${newsId}&userId=${userId}`, {
+    const response = await fetch(`${_API_BASE_URL}/api/view-news/create`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer${accessToken}`,
       },
+      body:JSON.stringify({newsId,userId})
     })
 
     const rawResponse = await response.json()
@@ -138,19 +139,22 @@ export const addNewViews = async (input: { newsId: string,userId:string }) => {
   }
   
 }
-export const updateNewViews = async (input: { newsId: string,userId:string }) => {
+export const updateNewViews = async (input: { newsId: string,userId:string,accessToken:string }) => {
   try {
-    const { newsId } = input
+    const { newsId,userId,accessToken } = input
 
     if (!newsId || newsId === '' ) {
       return { success: false, data: null, message: 'Invalid Id' }
     }
 
-    const response = await fetch(`${_API_BASE_URL}/api/news/update-views?newsId=${newsId}`, {
+    const response = await fetch(`${_API_BASE_URL}/api/news/update-views`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer${accessToken}`,
       },
+      body: JSON.stringify({newsId,userId})
+      
     })
 
     const rawResponse = await response.json()

@@ -1,26 +1,26 @@
 import { Header } from 'common/Header'
-import React, { useState } from 'react'
-import {  RootStackParamList } from 'models/common'
+import React, { useEffect, useState } from 'react'
+import { RootStackParamList } from 'models/common'
 import { Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useQuery } from '@tanstack/react-query'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { getNewsDetail } from 'utils/api'
+import { addNewViews, checkNewViews, getNewsDetail, updateNewViews } from 'utils/api'
 import { QUERY_KEYS } from 'utils/keys'
 import IconIon from 'react-native-vector-icons/Ionicons'
 import { HEIGHT, WIDTH } from 'utils/common'
 import { images } from '../../images'
 import CommonModal from 'common/Modal/Modal'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { useDataLoginInfoStore } from 'zustand/index '
 
-type NewsScreenProps = NativeStackScreenProps<
-  RootStackParamList,
-  'NewDetails'
->;
+type NewsScreenProps = NativeStackScreenProps<RootStackParamList, 'NewDetails'>
 export const NewDetails = ({ route, navigation }: NewsScreenProps) => {
   const { newsId } = route.params
   const [modalVisible, setModalVisible] = useState<boolean>(false)
   const [pickedWord, setPickedWord] = useState<string>('')
 
+  const [userInfo] = useDataLoginInfoStore((state: any) => [state.userInfo])
+// console.log(userInfo.token)
   const { data: news_detail, isLoading } = useQuery(
     [QUERY_KEYS.NEWS_DETAIL, newsId],
     async () => {
@@ -41,9 +41,39 @@ export const NewDetails = ({ route, navigation }: NewsScreenProps) => {
     },
   )
 
-  // const updateView =async ()=>{
-  //   await 
-  // }
+  const { data: check_views } = useQuery(
+    [QUERY_KEYS.CHECK_VIEWS, newsId, userInfo.id],
+    async () => {
+      try {
+        const { success } = await checkNewViews({ newsId: newsId, userId: userInfo.id })
+
+        return  success 
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    {
+      enabled: !!newsId,
+      refetchOnWindowFocus: false,
+    },
+  )
+  
+  const addViewNews = async () =>{
+    try{
+      await addNewViews({newsId:newsId,userId:userInfo.id,accessToken:userInfo.token})
+      await updateNewViews({newsId:newsId,userId:userInfo.id,accessToken:userInfo.token})
+    }
+    catch(error)  {
+        console.log('Something went wrong')
+    }
+  }
+  useEffect(()=>{
+    // console.log(!check_views)
+    if(typeof check_views !== 'undefined'&& !check_views){
+      console.log('1')
+      addViewNews()
+    }
+  },[check_views])
   return (
     <SafeAreaView>
       <Header />
