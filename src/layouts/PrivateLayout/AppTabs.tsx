@@ -2,10 +2,16 @@ import { HomeScreen } from 'components/Home'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import { News } from 'components/News/News'
+import { RootStackParamList } from 'models/common'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
 
-const Tab = createBottomTabNavigator()
+const Tab = createBottomTabNavigator<RootStackParamList>()
 
-export const AppTabs = () => {
+type Props = NativeStackScreenProps<
+  RootStackParamList,
+  'BottomTab'
+>;
+export const AppTabs = (props:Props) => {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({

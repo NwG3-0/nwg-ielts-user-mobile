@@ -1,6 +1,6 @@
 import { Header } from 'common/Header'
 import React, { useState } from 'react'
-import { NewsScreenProps } from 'models/common'
+import {  RootStackParamList } from 'models/common'
 import { Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useQuery } from '@tanstack/react-query'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -10,6 +10,12 @@ import IconIon from 'react-native-vector-icons/Ionicons'
 import { HEIGHT, WIDTH } from 'utils/common'
 import { images } from '../../images'
 import CommonModal from 'common/Modal/Modal'
+import { NativeStackScreenProps } from '@react-navigation/native-stack'
+
+type NewsScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'NewDetails'
+>;
 export const NewDetails = ({ route, navigation }: NewsScreenProps) => {
   const { newsId } = route.params
   const [modalVisible, setModalVisible] = useState<boolean>(false)
@@ -35,6 +41,9 @@ export const NewDetails = ({ route, navigation }: NewsScreenProps) => {
     },
   )
 
+  // const updateView =async ()=>{
+  //   await 
+  // }
   return (
     <SafeAreaView>
       <Header />
