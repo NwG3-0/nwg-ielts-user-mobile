@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native'
 import { useQuery } from '@tanstack/react-query'
 import { QUERY_KEYS } from 'utils/keys'
@@ -15,6 +15,7 @@ import { RootStackParamList } from 'models/common'
 
 type NewsProps = NativeStackScreenProps<RootStackParamList, 'News'>
 export const News = ({ navigation }: NewsProps) => {
+  const ref = useRef()
   const [limit] = useState<number>(10)
   const [page] = useState<number>(1)
   const [keyword, setKeyword] = useState<string>('')
@@ -24,6 +25,7 @@ export const News = ({ navigation }: NewsProps) => {
   const [value, setValue] = useState([])
   const [items, setItems] = useState(NEWS_LIST)
   var customParseFormat = require('dayjs/plugin/customParseFormat')
+  const topic = ['hihi', 'hehe', 'haha', 'huhu']
   registerTranslation('en', enGB)
   const onDismiss = useCallback(() => {
     setOpen(false)
@@ -59,7 +61,7 @@ export const News = ({ navigation }: NewsProps) => {
           startDate: dayjs(range.startDate).unix(),
           endDate: dayjs(range.endDate).unix(),
         })
-
+        console.log(data)
         return data
       } catch (error) {
         console.log(error)
@@ -73,6 +75,7 @@ export const News = ({ navigation }: NewsProps) => {
   const onSwitchNewsDetailScreen = (id: string) => {
     navigation.navigate('NewDetails', { newsId: id })
   }
+
   return (
     <SafeAreaView>
       <Header />
@@ -80,7 +83,6 @@ export const News = ({ navigation }: NewsProps) => {
         <View
           style={{
             width: WIDTH,
-            display: 'flex',
             flexDirection: 'column',
             justifyContent: 'center',
             alignItems: 'center',
@@ -172,6 +174,15 @@ export const News = ({ navigation }: NewsProps) => {
                 )
               })}
           </View>
+          <View style={styles.dropdownContainer}>
+            {dropOpen && (
+              <View>
+                {topic.map((item, id) => {
+                  return <Text>{item}</Text>
+                })}
+              </View>
+            )}
+          </View>
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -187,5 +198,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: WIDTH - 40,
     marginTop: 15,
+  },
+  dropdownContainer: {
+    borderWidth: 1,
+    borderRadius: 8,
+    marginHorizontal: 100,
+    width: WIDTH - 40,
+    marginTop: 30,
+    paddingVertical: 7,
   },
 })

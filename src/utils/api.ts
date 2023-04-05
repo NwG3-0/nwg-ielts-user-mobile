@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { USER_INFO } from 'models/api'
 import { DEVICES } from './common'
 
-export const _API_BASE_URL='http://192.168.55.104:4000'
+export const _API_BASE_URL='https://englishbe.lampnm.com'
 
 export const isLogin = async () => {
   console.log(await AsyncStorage.getItem(USER_INFO))
@@ -44,6 +44,7 @@ export const getNewsList = async (input: { limit: number; page: number; keyword:
     const type = input.type
     const startDate= input.startDate
     const endDate=input.endDate
+    console.log(input)
     const response = await fetch(
       `${_API_BASE_URL}/api/news-type?limit=${limit}&page=${page}&keyword=${keyword}&device=${DEVICES.MOBILE}&type=${type}&startDate=${startDate}&endDate=${endDate}`,
       {
@@ -57,6 +58,7 @@ export const getNewsList = async (input: { limit: number; page: number; keyword:
     const rawResponse = await response.json()
 
     if (rawResponse) {
+      console.log(rawResponse)
       return rawResponse
     }
   } catch (error) {
@@ -167,3 +169,30 @@ export const updateNewViews = async (input: { newsId: string,userId:string,acces
   }
 }
 
+export const checkSavedWord = async (input: { word: string,userId:string,accessToken:string  }) => {
+  try {
+    const { word,userId,accessToken  } = input
+ 
+    if (!word || word === '' || !userId || userId==='') {
+      return { success: false, data: null, message: 'Invalid Id' }
+    }
+
+    const response = await fetch(`${_API_BASE_URL}/api/card/check`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer${accessToken}`,
+      },
+      body: JSON.stringify({word,userId})
+    })
+
+    const rawResponse = await response.json()
+   
+    if (rawResponse) { 
+ 
+      return rawResponse
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
