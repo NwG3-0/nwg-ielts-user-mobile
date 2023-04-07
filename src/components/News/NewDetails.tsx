@@ -4,7 +4,8 @@ import { RootStackParamList } from 'models/common'
 import { Image, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { useQuery } from '@tanstack/react-query'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { addNewViews, checkNewViews, getNewsDetail, updateNewViews } from 'utils/api'
+import { addNewViews, checkNewViews, updateNewViews } from 'utils/apis/newsApi/viewApi'
+import { getNewsDetail } from 'utils/apis/newsApi/newsApi'
 import { QUERY_KEYS } from 'utils/keys'
 import IconIon from 'react-native-vector-icons/Ionicons'
 import { HEIGHT, WIDTH } from 'utils/common'
@@ -20,7 +21,7 @@ export const NewDetails = ({ route, navigation }: NewsScreenProps) => {
   const [pickedWord, setPickedWord] = useState<string>('')
 
   const [userInfo] = useDataLoginInfoStore((state: any) => [state.userInfo])
-// console.log(userInfo.token)
+  // console.log(userInfo.token)
   const { data: news_detail, isLoading } = useQuery(
     [QUERY_KEYS.NEWS_DETAIL, newsId],
     async () => {
@@ -47,7 +48,7 @@ export const NewDetails = ({ route, navigation }: NewsScreenProps) => {
       try {
         const { success } = await checkNewViews({ newsId: newsId, userId: userInfo.id })
 
-        return  success 
+        return success
       } catch (error) {
         console.log(error)
       }
@@ -57,23 +58,20 @@ export const NewDetails = ({ route, navigation }: NewsScreenProps) => {
       refetchOnWindowFocus: false,
     },
   )
-  
-  const addViewNews = async () =>{
-    try{
-      await addNewViews({newsId:newsId,userId:userInfo.id,accessToken:userInfo.token})
-      await updateNewViews({newsId:newsId,userId:userInfo.id,accessToken:userInfo.token})
-    }
-    catch(error)  {
-        console.log('Something went wrong')
+
+  const addViewNews = async () => {
+    try {
+      await addNewViews({ newsId: newsId, userId: userInfo.id, accessToken: userInfo.token })
+      await updateNewViews({ newsId: newsId, userId: userInfo.id, accessToken: userInfo.token })
+    } catch (error) {
+      console.log('Something went wrong')
     }
   }
-  useEffect(()=>{
-    // console.log(!check_views)
-    if(typeof check_views !== 'undefined'&& !check_views){
-      console.log('1')
+  useEffect(() => {
+    if (typeof check_views !== 'undefined' && !check_views) {
       addViewNews()
     }
-  },[check_views])
+  }, [check_views])
   return (
     <SafeAreaView>
       <Header />
@@ -117,9 +115,8 @@ export const NewDetails = ({ route, navigation }: NewsScreenProps) => {
           </ScrollView>
         </View>
       )}
-      <View style={{ backgroundColor: 'rgba:0,0,0,0.8', height: '100%' }}>
-        <CommonModal open={modalVisible} setOpen={setModalVisible} word={pickedWord} />
-      </View>
+
+      <CommonModal open={modalVisible} setOpen={setModalVisible} word={pickedWord} />
     </SafeAreaView>
   )
 }

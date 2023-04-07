@@ -3,11 +3,13 @@ import React, { useEffect, useRef, useState } from 'react'
 import { Alert, Modal, StyleSheet, Text, Pressable, View, ScrollView } from 'react-native'
 import { getDictionary } from 'utils/dictionary'
 import { QUERY_KEYS } from 'utils/keys'
-import Icon from 'react-native-vector-icons/FontAwesome'
+
 import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from 'expo-av'
 import { useDataLoginInfoStore } from 'zustand/index '
-import { checkSavedWord } from 'utils/api'
+import { checkSavedWord, saveWord } from 'utils/apis/cardApi/wordApi'
 import { WIDTH } from 'utils/common'
+import WordDetails from './WordDetails'
+import TopicPicker from './TopicPicker'
 interface CommonModalProps {
   open: boolean
   setOpen: Function
@@ -19,8 +21,9 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
   const [openDrop, setOpenDrop] = useState(false)
   const [displayTopicPicker, setDisplayTopicPicker] = useState(false)
   const [pickedTopic, setPickedTopic] = useState('')
-  const [saved, setSaved] = useState(false)
-  const topic = ['hihi', 'hehe', 'haha', 'huhu']
+
+  const [phoneticAudio, setPhoneticAudio] = useState('')
+
   const { data: wordDetail, isLoading: isLoadingWord } = useQuery(
     [QUERY_KEYS.WORD, word],
     async () => {
@@ -38,6 +41,7 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
       refetchOnWindowFocus: false,
     },
   )
+
   const { data: checkSave } = useQuery(
     [QUERY_KEYS.WORD, word, userInfo.id, userInfo.token],
     async () => {
@@ -56,6 +60,19 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
     },
   )
 
+  const getPhonetic = () => {
+    var phoneticLink
+    for (let i = 0; i < wordDetail?.phonetics.length; i++) {
+      if (wordDetail?.phonetics[i].audio.length > 0) {
+        phoneticLink = wordDetail?.phonetics[i]
+        console.log('res', phoneticLink)
+        break
+      }
+    }
+
+    setPhoneticAudio(phoneticLink)
+  }
+
   useEffect(() => {
     Audio.setAudioModeAsync({
       allowsRecordingIOS: false,
@@ -69,8 +86,8 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
       await sound.current.loadAsync({ uri: 'https://api.dictionaryapi.dev/media/pronunciations/en/been-us.mp3' })
     }
     LoadAudio()
+
     return () => {
-      console.log('Sound destroyed')
       sound.current.unloadAsync()
     }
   }, [])
@@ -84,16 +101,17 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
     }
   }
 
-  const handleTopicPicker = (topic: string) => {
-    setPickedTopic(topic)
-    setOpenDrop(false)
-  }
+  useEffect(() => {
+    if (isLoadingWord == false && wordDetail) {
+      getPhonetic()
+    }
+  }, [wordDetail])
+
   return (
     <Modal
       transparent={true}
       visible={open}
       onRequestClose={() => {
-        Alert.alert('Modal has been closed.')
         setOpen(false)
       }}
     >
@@ -104,92 +122,27 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
           ) : (
             <ScrollView style={{ width: '100%' }}>
               {displayTopicPicker ? (
-                <>
-                  <View>
-                    <Text>Choose Topic:</Text>
-                    <Pressable onPress={() => setOpenDrop(!openDrop)}>
-                      <View style={styles.dropdownContainer}>
-                        <Text>{pickedTopic}</Text>
-                      </View>
-                    </Pressable>
-
-                    {openDrop && (
-                      <View>
-                        {topic.map((item, id) => {
-                          // console.log(item)
-                          return (
-                            <Pressable
-                              onPress={() => {
-                                handleTopicPicker(item)
-                              }}
-                              key={id}
-                            >
-                              <Text>{item}</Text>
-                            </Pressable>
-                          )
-                        })}
-                      </View>
-                    )}
-                    <Pressable
-                      disabled={pickedTopic !== '' ? true : false}
-                      onPress={() => setDisplayTopicPicker(true)}
-                      style={{ alignSelf: 'center' }}
-                    >
-                      <View style={styles.saveButtonContainer}>
-                        <Text>Save</Text>
-                      </View>
-                    </Pressable>
-                  </View>
-                </>
+                <TopicPicker
+                  pickedTopic={pickedTopic}
+                  word={word}
+                  userInfo={userInfo}
+                  phoneticAudio={phoneticAudio}
+                  wordDetail={wordDetail}
+                  setDisplayTopicPicker={setDisplayTopicPicker}
+                  openDrop={openDrop}
+                  setOpenDrop={setOpenDrop}
+                  setPickedTopic={setPickedTopic}
+                  setOpen={setOpen}
+                />
               ) : (
-                <>
-                  <View style={styles.meaningContainer}>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                      <Text style={styles.title}>{word}</Text>
-                      <Pressable onPress={() => PlayAudio()}>
-                        <Icon name="volume-up" style={{ marginLeft: 8, fontSize: 14 }} />
-                      </Pressable>
-                    </View>
-
-                    <Pressable onPress={() => setOpen(false)}>
-                      <Icon name="close" style={styles.closeIcon} />
-                    </Pressable>
-                  </View>
-
-                  <View style={{ flexDirection: 'row', marginTop: 8, alignSelf: 'flex-start' }}>
-                    <Text style={styles.meaningSubtitle}>Spelling: </Text>
-                    <Text>{wordDetail?.phonetic}</Text>
-                  </View>
-
-                  <View style={{ flexDirection: 'row', marginTop: 8, alignSelf: 'flex-start' }}>
-                    <Text style={styles.meaningSubtitle}>Definitions: </Text>
-                  </View>
-
-                  {wordDetail?.meanings?.map((item: any, id: any) => {
-                    return (
-                      <View style={{ marginTop: 8 }} key={id}>
-                        <Text style={[styles.meaningSubtitle, { fontSize: 14 }]}>{item.partOfSpeech}: </Text>
-
-                        {item?.definitions?.map((it: any, idx: any) => {
-                          return (
-                            <Text style={{ marginTop: 5 }} key={idx}>
-                              - {it.definition}
-                            </Text>
-                          )
-                        })}
-                      </View>
-                    )
-                  })}
-                  <Pressable
-                    disabled={checkSave.isSaved ? true : false}
-                    onPress={() => setDisplayTopicPicker(true)}
-                    style={{ alignSelf: 'center' }}
-                  >
-                    <View style={styles.saveButtonContainer}>
-                      <Text>Save</Text>
-                    </View>
-                  </Pressable>
-                </>
+                <WordDetails
+                  word={word}
+                  wordDetail={wordDetail}
+                  setDisplayTopicPicker={setDisplayTopicPicker}
+                  checkSave={checkSave}
+                  setOpen={setOpen}
+                  PlayAudio={PlayAudio}
+                />
               )}
             </ScrollView>
           )}

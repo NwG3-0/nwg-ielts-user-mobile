@@ -28,7 +28,7 @@ const App = () => {
 
   useEffect(() => {
     loadStorageData()
-  }, [userInfo])
+  }, [])
 
   return (
     <QueryClientProvider client={queryClient}>

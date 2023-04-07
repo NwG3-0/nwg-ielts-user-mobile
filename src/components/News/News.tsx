@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react'
 import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View, ScrollView } from 'react-native'
 import { useQuery } from '@tanstack/react-query'
 import { QUERY_KEYS } from 'utils/keys'
-import { getNewsList } from 'utils/api'
+import { getNewsList } from 'utils/apis/newsApi/newsApi'
 import { NEWS_LIST, WIDTH } from 'utils/common'
 import { DatePickerModal } from 'react-native-paper-dates'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -15,7 +15,6 @@ import { RootStackParamList } from 'models/common'
 
 type NewsProps = NativeStackScreenProps<RootStackParamList, 'News'>
 export const News = ({ navigation }: NewsProps) => {
-  const ref = useRef()
   const [limit] = useState<number>(10)
   const [page] = useState<number>(1)
   const [keyword, setKeyword] = useState<string>('')
@@ -61,7 +60,7 @@ export const News = ({ navigation }: NewsProps) => {
           startDate: dayjs(range.startDate).unix(),
           endDate: dayjs(range.endDate).unix(),
         })
-        console.log(data)
+
         return data
       } catch (error) {
         console.log(error)
@@ -152,7 +151,7 @@ export const News = ({ navigation }: NewsProps) => {
                     key={cont.id}
                     style={{
                       width: WIDTH - 40,
-                      padding: 15,
+                      paddingVertical: 15,
                       marginTop: 20,
                       borderRadius: 2,
                       shadowColor: '#000',
@@ -166,22 +165,13 @@ export const News = ({ navigation }: NewsProps) => {
                     onPress={() => onSwitchNewsDetailScreen(cont.id)}
                   >
                     <Image source={{ uri: cont.image }} style={{ width: '100%', height: 200 }} />
-                    <View style={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
+                    <View style={{ width: '100%', display: 'flex', justifyContent: 'space-between', marginTop: 8 }}>
                       <Text style={{ fontSize: 18, fontWeight: '600' }}>{cont.title}</Text>
                       <Text numberOfLines={4}>{cont.content}</Text>
                     </View>
                   </TouchableOpacity>
                 )
               })}
-          </View>
-          <View style={styles.dropdownContainer}>
-            {dropOpen && (
-              <View>
-                {topic.map((item, id) => {
-                  return <Text>{item}</Text>
-                })}
-              </View>
-            )}
           </View>
         </View>
       </ScrollView>
@@ -198,13 +188,5 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     width: WIDTH - 40,
     marginTop: 15,
-  },
-  dropdownContainer: {
-    borderWidth: 1,
-    borderRadius: 8,
-    marginHorizontal: 100,
-    width: WIDTH - 40,
-    marginTop: 30,
-    paddingVertical: 7,
   },
 })
