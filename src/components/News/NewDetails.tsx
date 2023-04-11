@@ -92,11 +92,13 @@ export const NewDetails = ({ route, navigation }: NewsScreenProps) => {
             <IconIon name="arrow-back" size={24} color="#000" />
             <Text style={{ fontSize: 18, marginLeft: 5 }}>Back to Home</Text>
           </TouchableOpacity>
+
           <ScrollView style={{ paddingHorizontal: 7, marginTop: 18, height: HEIGHT - 130 }}>
             <Image source={{ uri: news_detail.Image }} style={{ width: '100%', height: 300 }} />
             <Text style={{ marginVertical: 20, fontSize: 24, fontWeight: '600', textAlign: 'center' }}>
               {news_detail.Title}
             </Text>
+
             <Text style={{ fontSize: 20 }}>
               {news_detail.Content.map((item: any, id: any) => {
                 return (

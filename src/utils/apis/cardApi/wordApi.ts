@@ -57,3 +57,32 @@ export const checkSavedWord = async (input: { word: string,userId:string,accessT
     }
   }
   
+  export const getWord = async (input :{limit:number,page:number,keyword:string,startDate:number,endDate:number,topicName:string})=>{
+    try {
+      const limit = input.limit ?? 10
+      const page = input.page ?? 1
+      const keyword = input.keyword ?? ''
+      const startDate= input.startDate
+      const topicName=input.topicName
+      const endDate=input.endDate
+   
+    const response =await fetch(
+    `${_API_BASE_URL}/api/card?limit=${limit}&page=${page}&keyword=${keyword}&device=${DEVICES.MOBILE}&startDate=${startDate}&endDate=${endDate}&topicName=${topicName}`,
+    {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    },)
+    console.log(input)
+    const rawResponse = await response.json()
+  
+    if (rawResponse) {
+
+      return rawResponse
+    }
+  } catch (error) {
+    return { success: false, data: null, message: 'Something went wrong' }
+  }
+  }
+  

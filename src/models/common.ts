@@ -7,6 +7,7 @@ export type RootStackParamList = {
   Post: { postId: string };
   Home:undefined;
   BottomTab:undefined
+  Collection:undefined
 }
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> =
   NativeStackScreenProps<RootStackParamList, Screen>;

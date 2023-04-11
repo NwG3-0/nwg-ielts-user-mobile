@@ -24,7 +24,7 @@ export const News = ({ navigation }: NewsProps) => {
   const [value, setValue] = useState([])
   const [items, setItems] = useState(NEWS_LIST)
   var customParseFormat = require('dayjs/plugin/customParseFormat')
-  const topic = ['hihi', 'hehe', 'haha', 'huhu']
+
   registerTranslation('en', enGB)
   const onDismiss = useCallback(() => {
     setOpen(false)
