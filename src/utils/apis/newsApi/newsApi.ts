@@ -20,11 +20,12 @@ export const getNewsList = async (input: { limit: number; page: number; keyword:
           },
         },
       )
+      console.log(input)
   
       const rawResponse = await response.json()
   
       if (rawResponse) {
-  
+        console.log(rawResponse)
         return rawResponse
       }
     } catch (error) {

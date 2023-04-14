@@ -11,8 +11,10 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { getWord } from 'utils/apis/cardApi/wordApi'
 import { WIDTH } from 'utils/common'
 import { QUERY_KEYS } from 'utils/keys'
+import { useDataLoginInfoStore } from 'zustand/index '
 type CollectionScreenProps = NativeStackScreenProps<RootStackParamList, 'Collection'>
 export const Collection = ({ route, navigation }: CollectionScreenProps) => {
+  const [userInfo] = useDataLoginInfoStore((state: any) => [state.userInfo])
   const [pickedTopic, setPickedTopic] = useState('')
   const data = ['today', 'tomorrow']
   const [range, setRange] = useState<any>({ startDate: undefined, endDate: undefined })
@@ -28,8 +30,6 @@ export const Collection = ({ route, navigation }: CollectionScreenProps) => {
   const onConfirm = useCallback(
     ({ startDate, endDate }: any) => {
       setOpen(false)
-      // let startDate = dayjs(start).format('DD/MM/YYYY')
-      // let endDate = dayjs(end).format('DD/MM/YYYY')
       setRange({ startDate, endDate })
     },
     [setOpen, setRange],
@@ -43,6 +43,8 @@ export const Collection = ({ route, navigation }: CollectionScreenProps) => {
       pickedTopic,
       dayjs(range.startDate).unix(),
       dayjs(range.endDate).unix(),
+      userInfo.token,
+      userInfo.id,
     ],
     async () => {
       try {
@@ -53,6 +55,8 @@ export const Collection = ({ route, navigation }: CollectionScreenProps) => {
           topicName: pickedTopic.toString(),
           startDate: dayjs(range.startDate).unix(),
           endDate: dayjs(range.endDate).unix(),
+          accessToken: userInfo.token,
+          userId: userInfo.id,
         })
         console.log(data)
         return data
