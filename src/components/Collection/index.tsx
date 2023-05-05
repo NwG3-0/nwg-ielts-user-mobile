@@ -3,15 +3,15 @@ import { useQuery } from '@tanstack/react-query'
 import DropdownPicker from 'common/DropdownPicker/DropdownPicker'
 import dayjs from 'dayjs'
 import { RootStackParamList } from 'models/common'
-import React, { useState, useEffect, useCallback } from 'react'
-import { StyleSheet, Text, TextInput, View } from 'react-native'
-import { enGB, registerTranslation } from 'react-native-paper-dates'
-import { DatePickerModal } from 'react-native-paper-dates'
+import React, { useCallback, useState } from 'react'
+import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+import { DatePickerModal, enGB, registerTranslation } from 'react-native-paper-dates'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { getWord } from 'utils/apis/cardApi/wordApi'
 import { WIDTH } from 'utils/common'
 import { QUERY_KEYS } from 'utils/keys'
 import { useDataLoginInfoStore } from 'zustand/index '
+import CommonModal from './Modal'
 type CollectionScreenProps = NativeStackScreenProps<RootStackParamList, 'Collection'>
 export const Collection = ({ route, navigation }: CollectionScreenProps) => {
   const [userInfo] = useDataLoginInfoStore((state: any) => [state.userInfo])
@@ -22,6 +22,8 @@ export const Collection = ({ route, navigation }: CollectionScreenProps) => {
   const [limit] = useState<number>(10)
   const [page] = useState<number>(1)
   const [keyword, setKeyword] = useState<string>('')
+  const [inspectedWord, setInspectedWord] = useState('')
+  const [openModal, setOpenModal] = useState(false)
   registerTranslation('en', enGB)
   const onDismiss = useCallback(() => {
     setOpen(false)
@@ -58,7 +60,7 @@ export const Collection = ({ route, navigation }: CollectionScreenProps) => {
           accessToken: userInfo.token,
           userId: userInfo.id,
         })
-        console.log(data)
+
         return data
       } catch (error) {
         console.log(error)
@@ -69,9 +71,15 @@ export const Collection = ({ route, navigation }: CollectionScreenProps) => {
       refetchOnWindowFocus: false,
     },
   )
+
+  const handleInspectWord = (word: any) => {
+    setInspectedWord(word)
+    setOpenModal(true)
+  }
   return (
     <>
       <SafeAreaView />
+      <CommonModal open={openModal} setOpen={setOpenModal} word={inspectedWord} />
       <DatePickerModal
         locale="en"
         mode="range"
@@ -81,7 +89,7 @@ export const Collection = ({ route, navigation }: CollectionScreenProps) => {
         endDate={range.endDate}
         onConfirm={onConfirm}
       />
-      <View style={{ marginHorizontal: 23 }}>
+      <View style={{ marginHorizontal: 20 }}>
         <View style={styles.input}>
           <TextInput
             placeholder="Pick a range date"
@@ -90,6 +98,23 @@ export const Collection = ({ route, navigation }: CollectionScreenProps) => {
           />
         </View>
         <DropdownPicker data={data} pickedItem={pickedTopic} setPickedItem={setPickedTopic} />
+        <Text style={{ marginTop: 20, fontWeight: '600', fontSize: 16 }}>Saved word:</Text>
+        <View style={{ marginTop: 15 }}>
+          {words?.map((item: any, index: number) => {
+            return (
+              <Pressable
+                onPress={() => {
+                  handleInspectWord(item.word)
+                }}
+                key={index}
+              >
+                <View key={index} style={{ borderBottomWidth: 1, borderBottomColor: '#CCCCCC', paddingVertical: 10 }}>
+                  <Text>{item.word}</Text>
+                </View>
+              </Pressable>
+            )
+          })}
+        </View>
       </View>
     </>
   )

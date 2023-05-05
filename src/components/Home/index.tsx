@@ -10,7 +10,10 @@ import { ListResource, LIST_RESOURCE, WIDTH, HEIGHT } from 'utils/common'
 import { HomeStyles } from 'style/home'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { RootStackParamList } from 'models/common'
-type HomeScreenProps = NativeStackScreenProps<RootStackParamList, 'Home'>
+type HomeScreenProps = NativeStackScreenProps<
+  RootStackParamList,
+  'Home'
+>;
 const IMAGE = [
   {
     id: 1,
@@ -31,6 +34,8 @@ const IMAGE = [
 
 export const HomeScreen = ({ navigation }: HomeScreenProps) => {
   const [setUserInfo] = useDataLoginInfoStore((state: any) => [state.setUserInfo])
+
+
 
   return (
     <SafeAreaView>

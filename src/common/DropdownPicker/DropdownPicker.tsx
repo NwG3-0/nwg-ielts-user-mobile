@@ -18,7 +18,7 @@ function DropdownPicker({ data, setPickedItem, pickedItem }: DropdownPickerProps
     <View>
       <Pressable onPress={() => setOpenDrop(!openDrop)}>
         <View style={styles.dropdownContainer}>
-          <Text>{pickedItem}</Text>
+          <Text style={{fontSize:14}}>{pickedItem||'Choose a topic'}</Text>
         </View>
       </Pressable>
 
@@ -66,6 +66,6 @@ const styles = StyleSheet.create({
     width: '100%',
     marginTop: 15,
     paddingVertical: 7,
-    paddingHorizontal: 13,
+    paddingHorizontal:12,
   },
 })

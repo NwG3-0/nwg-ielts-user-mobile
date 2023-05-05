@@ -79,7 +79,6 @@ export const checkSavedWord = async (input: { word: string,userId:string,accessT
     },)
    
     const rawResponse = await response.json()
-    console.log(input)
     if (rawResponse) {
       return rawResponse
     }
