@@ -10,43 +10,46 @@ export interface ListResource {
   color: string
   title: string
 }
-export const NEWS_LIST: NewsList[] =[
+
+export const SELECT_NEWS = [
+  NEWS.SPORT,
+  NEWS.BUSINESS,
+  NEWS.EDUCATION,
+  NEWS.ENTERTAINMENT,
+  NEWS.MUSIC,
+  NEWS.TECHNOLOGY,
+  NEWS.TRAVEL,
+]
+
+export const NEWS_LIST: NewsList[] = [
   {
-  
     label: 'Sport',
     value: NEWS.SPORT,
   },
   {
- 
     label: 'Business',
     value: NEWS.BUSINESS,
   },
   {
-   
     label: 'Education',
     value: NEWS.EDUCATION,
   },
   {
-  
     label: 'Entertainment',
     value: NEWS.ENTERTAINMENT,
   },
   {
-   
     label: 'Music',
     value: NEWS.MUSIC,
   },
   {
- 
     label: 'Technology',
     value: NEWS.TECHNOLOGY,
   },
   {
-   
     label: 'Travel',
     value: NEWS.TRAVEL,
   },
-
 ]
 export const LIST_RESOURCE: ListResource[] = [
   {

@@ -42,23 +42,23 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
     },
   )
 
-  const { data: checkSave } = useQuery(
-    [QUERY_KEYS.WORD, word, userInfo.id, userInfo.token],
-    async () => {
-      try {
-        const response = await checkSavedWord({ word: word, userId: userInfo.id, accessToken: userInfo.token })
+  // const { data: checkSave } = useQuery(
+  //   [QUERY_KEYS.WORD, word, userInfo.id, userInfo.token],
+  //   async () => {
+  //     try {
+  //       const response = await checkSavedWord({ word: word, userId: userInfo.id, accessToken: userInfo.token })
 
-        return response
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    {
-      refetchInterval: false,
-      enabled: word !== '',
-      refetchOnWindowFocus: false,
-    },
-  )
+  //       return response
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   },
+  //   {
+  //     refetchInterval: false,
+  //     enabled: word !== '',
+  //     refetchOnWindowFocus: false,
+  //   },
+  // )
 
   const getPhonetic = () => {
     var phoneticLink
@@ -139,7 +139,7 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
                   word={word}
                   wordDetail={wordDetail}
                   setDisplayTopicPicker={setDisplayTopicPicker}
-                  checkSave={checkSave}
+                  checkSave={false}
                   setOpen={setOpen}
                   PlayAudio={PlayAudio}
                 />

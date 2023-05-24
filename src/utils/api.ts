@@ -2,7 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage'
 import { USER_INFO } from 'models/api'
 import { DEVICES } from './common'
 
-export const _API_BASE_URL='https://englishbe.lampnm.com'
+export const _API_BASE_URL = 'http://192.168.16.170:4000'
 
 export const isLogin = async () => {
   console.log(await AsyncStorage.getItem(USER_INFO))
@@ -31,10 +31,7 @@ export const login = async ({ email, password }: { email: string; password: stri
       return rawResponse
     }
   } catch (error) {
+    console.log(error)
     return { success: false, data: null, message: 'Something went wrong' }
   }
 }
-
-
-
-

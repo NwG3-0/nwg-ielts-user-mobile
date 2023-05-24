@@ -3,38 +3,30 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { PrivateLayout } from 'layouts/PrivateLayout/PrivateLayout'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { USER_INFO } from 'models/api'
-import { useDataLoginInfoStore } from 'zustand/index '
 import { LoginScreen } from 'components/Auth/Login'
+import { withAuth } from 'hocs/withauth'
 
 const Stack = createNativeStackNavigator()
-const queryClient = new QueryClient()
-const App = () => {
-  const [userInfo, setUserInfo] = useDataLoginInfoStore((state: any) => [state.userInfo, state.setUserInfo])
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchInterval: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+})
 
-  const loadStorageData = async (): Promise<void> => {
-    try {
-      const authDataSerialized = await AsyncStorage.getItem(USER_INFO)
-
-      if (authDataSerialized) {
-        const _authData: any = JSON.parse(authDataSerialized)
-        setUserInfo(_authData)
-      }
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  useEffect(() => {
-    loadStorageData()
-  }, [])
+const App = ({ ...props }) => {
+  const { user } = props
 
   return (
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName={userInfo ? 'PrivateLayout' : 'Login'} screenOptions={{ headerShown: false }}>
-          {!userInfo ? (
+        <Stack.Navigator
+          initialRouteName={user.email !== '' ? 'PrivateLayout' : 'Login'}
+          screenOptions={{ headerShown: false }}
+        >
+          {user.email === '' ? (
             <>
               <Stack.Screen name="Login" component={LoginScreen} />
             </>
@@ -49,4 +41,4 @@ const App = () => {
   )
 }
 
-export default App
+export default withAuth(App)

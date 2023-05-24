@@ -26,6 +26,7 @@ export const LoginScreen = ({ navigation }: any) => {
           email: info.email,
           password: info.password,
         })
+        console.log(success, data)
         if (success) {
           AsyncStorage.setItem(USER_INFO, JSON.stringify(data))
           setUserInfo(data)
