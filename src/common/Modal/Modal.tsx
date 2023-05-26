@@ -10,6 +10,8 @@ import { checkSavedWord, saveWord } from 'utils/apis/cardApi/wordApi'
 import { WIDTH } from 'utils/common'
 import WordDetails from './WordDetails'
 import TopicPicker from './TopicPicker'
+import { useCheckSaveWord } from 'hooks/useCheckSaveWord'
+import { globalStore } from 'hocs/globalStore'
 interface CommonModalProps {
   open: boolean
   setOpen: Function
@@ -17,13 +19,13 @@ interface CommonModalProps {
 }
 function CommonModal({ open, setOpen, word }: CommonModalProps) {
   const sound = useRef(new Audio.Sound())
-  const [userInfo] = useDataLoginInfoStore((state: any) => [state.userInfo])
+
   const [openDrop, setOpenDrop] = useState(false)
   const [displayTopicPicker, setDisplayTopicPicker] = useState(false)
   const [pickedTopic, setPickedTopic] = useState('')
-
+  const { user } = globalStore((state: any) => state.userStore)
   const [phoneticAudio, setPhoneticAudio] = useState('')
-
+console.log(user.id)
   const { data: wordDetail, isLoading: isLoadingWord } = useQuery(
     [QUERY_KEYS.WORD, word],
     async () => {
@@ -60,12 +62,13 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
   //   },
   // )
 
+  const { data: checkSave, isLoading: isNewsDetailLoading } = useCheckSaveWord({word:word,userId:user.id})
+  console.log(checkSave?.data.isSaved)
   const getPhonetic = () => {
     var phoneticLink
     for (let i = 0; i < wordDetail?.phonetics.length; i++) {
       if (wordDetail?.phonetics[i].audio.length > 0) {
         phoneticLink = wordDetail?.phonetics[i]
-        console.log('res', phoneticLink)
         break
       }
     }
@@ -125,7 +128,7 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
                 <TopicPicker
                   pickedTopic={pickedTopic}
                   word={word}
-                  userInfo={userInfo}
+                  userInfo={user}
                   phoneticAudio={phoneticAudio}
                   wordDetail={wordDetail}
                   setDisplayTopicPicker={setDisplayTopicPicker}
@@ -139,7 +142,7 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
                   word={word}
                   wordDetail={wordDetail}
                   setDisplayTopicPicker={setDisplayTopicPicker}
-                  checkSave={false}
+                  checkSave={checkSave?.data.isSaved}
                   setOpen={setOpen}
                   PlayAudio={PlayAudio}
                 />

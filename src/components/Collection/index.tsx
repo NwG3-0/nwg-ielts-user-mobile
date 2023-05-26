@@ -12,9 +12,11 @@ import { WIDTH } from 'utils/common'
 import { QUERY_KEYS } from 'utils/keys'
 import { useDataLoginInfoStore } from 'zustand/index '
 import CommonModal from './Modal'
+import { globalStore } from 'hocs/globalStore'
+import { useGetWord } from 'hooks/useGetWord'
 type CollectionScreenProps = NativeStackScreenProps<RootStackParamList, 'Collection'>
 export const Collection = ({ route, navigation }: CollectionScreenProps) => {
-  const [userInfo] = useDataLoginInfoStore((state: any) => [state.userInfo])
+  const { user } = globalStore((state: any) => state.userStore)
   const [pickedTopic, setPickedTopic] = useState('')
   const data = ['today', 'tomorrow']
   const [range, setRange] = useState<any>({ startDate: undefined, endDate: undefined })
@@ -36,41 +38,15 @@ export const Collection = ({ route, navigation }: CollectionScreenProps) => {
     },
     [setOpen, setRange],
   )
-  const { data: words } = useQuery(
-    [
-      QUERY_KEYS.COLLECTION_WORDS,
-      limit,
-      page,
-      keyword,
-      pickedTopic,
-      dayjs(range.startDate).unix(),
-      dayjs(range.endDate).unix(),
-      userInfo.token,
-      userInfo.id,
-    ],
-    async () => {
-      try {
-        const { data } = await getWord({
-          limit,
-          page,
-          keyword,
-          topicName: pickedTopic.toString(),
-          startDate: dayjs(range.startDate).unix(),
-          endDate: dayjs(range.endDate).unix(),
-          accessToken: userInfo.token,
-          userId: userInfo.id,
-        })
-
-        return data
-      } catch (error) {
-        console.log(error)
-      }
-    },
-    {
-      refetchInterval: false,
-      refetchOnWindowFocus: false,
-    },
-  )
+  const { data: words } = useGetWord({
+    limit: limit,
+    page: page,
+    keyword: keyword,
+    topicName: pickedTopic.toString(),
+    startDate: dayjs(range.startDate).unix(),
+    endDate: dayjs(range.endDate).unix(),
+    userId: user.id,
+  })
 
   const handleInspectWord = (word: any) => {
     setInspectedWord(word)
@@ -100,7 +76,7 @@ export const Collection = ({ route, navigation }: CollectionScreenProps) => {
         <DropdownPicker data={data} pickedItem={pickedTopic} setPickedItem={setPickedTopic} />
         <Text style={{ marginTop: 20, fontWeight: '600', fontSize: 16 }}>Saved word:</Text>
         <View style={{ marginTop: 15 }}>
-          {words?.map((item: any, index: number) => {
+          {words?.data.data.map((item: any, index: number) => {
             return (
               <Pressable
                 onPress={() => {

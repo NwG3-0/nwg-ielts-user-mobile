@@ -28,15 +28,13 @@ export const News = ({ navigation }: NewsProps) => {
   const [limit] = useState<number>(10)
   const [page] = useState<number>(1)
   const [keyword] = useState<string>('')
-  const [range] = useState<any>({ startDate: undefined, endDate: undefined })
+
 
   const { data: news_list } = useNewsData({
     limit,
     page,
     keyword,
     type: types,
-    startDate: dayjs(range.startDate).unix(),
-    endDate: dayjs(range.endDate).unix(),
   })
 
   return (

@@ -12,18 +12,15 @@ export const getNewsTypeList = async (input: {
   page: number
   keyword: string
   type: string
-  startDate: number
-  endDate: number
+
 }) => {
   const limit = input.limit ?? 10
   const page = input.page ?? 1
   const keyword = input.keyword ?? ''
   const type = input.type
-  const startDate = dayjs.utc().subtract(2, 'months').startOf('month').unix()
-  const endDate = dayjs.utc().endOf('month').unix()
 
   const { data } = await axiosInstance.get(
-    `/api/news-type?limit=${limit}&page=${page}&keyword=${keyword}&device=${DEVICES.MOBILE}&type=${type}&startDate=${startDate}&endDate=${endDate}`,
+    `/api/news-type?limit=${limit}&page=${page}&keyword=${keyword}&device=${DEVICES.MOBILE}&type=${type}`,
   )
 
   return data

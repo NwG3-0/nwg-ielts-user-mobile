@@ -31,7 +31,7 @@ export const LoginScreen = ({ navigation }: any) => {
           AsyncStorage.setItem(USER_INFO, JSON.stringify(data))
           setUserInfo(data)
 
-          navigation.navigate('PrivateLayout')
+          navigation.navigate('PrivateLayout',{screen:'Home'})
         }
       }
     } catch (error) {

@@ -14,7 +14,6 @@ axiosInstance.interceptors.request.use(
 
     if (userInfo) {
       const accessToken = JSON.parse(userInfo).token
-
       config.headers.Authorization = `Bearer ${accessToken}`
     }
 

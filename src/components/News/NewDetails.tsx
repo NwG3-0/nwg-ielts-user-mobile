@@ -26,12 +26,12 @@ export const NewDetails = ({ route, navigation }: NewsScreenProps) => {
 
   const { data: news_detail, isLoading: isNewsDetailLoading } = useNewsDetailData(newsId)
 
-  const { data: check_views } = useCheckNewsDetail({ newsId, userId: user.id })
+  const { data: check_views } = useCheckNewsDetail({ newsId:newsId, userId: user.id })
 
   const addViewNews = async () => {
     try {
-      await addNewViews({ newsId: newsId, userId: user.id, accessToken: user.token })
-      await updateNewViews({ newsId: newsId, userId: user.id, accessToken: user.token })
+      await addNewViews({ newsId: newsId, userId: user.id })
+      await updateNewViews({ newsId: newsId, userId: user.id })
     } catch (error) {
       console.log('Something went wrong')
     }

@@ -67,7 +67,6 @@ function TopicPicker({
           saveWord({
             word: word,
             userId: userInfo.id,
-            accessToken: userInfo.token,
             topicName: pickedTopic,
             audio: phoneticAudio?.audio,
             phonetic: wordDetail.phonetic,

@@ -7,14 +7,12 @@ interface Parameters {
   page: number
   keyword: string
   type: string
-  startDate: number
-  endDate: number
 }
 
-export const useNewsData = ({ limit, page, keyword, type, startDate, endDate }: Parameters) => {
+export const useNewsData = ({ limit, page, keyword, type,  }: Parameters) => {
   return useQuery({
-    queryKey: [QUERY_KEYS.NEWS_LIST, limit, page, keyword, type, startDate, endDate],
-    queryFn: () => getNewsTypeList({ limit, page, keyword, type, startDate, endDate }),
+    queryKey: [QUERY_KEYS.NEWS_LIST, limit, page, keyword, type ],
+    queryFn: () => getNewsTypeList({ limit, page, keyword, type}),
     staleTime: 2 * 60 * 1000,
   })
 }

@@ -16,55 +16,28 @@ export const checkNewViews = async (input: { newsId: string; userId: string }) =
   return data
 }
 
-export const addNewViews = async (input: { newsId: string; userId: string; accessToken: string }) => {
-  try {
-    const { newsId, userId, accessToken } = input
+export const addNewViews = async (input: { newsId: string; userId: string}) => {
+
+    const { newsId, userId } = input
 
     if (!newsId || newsId === '' || !userId || userId === '') {
       return { success: false, data: null, message: 'Invalid Id' }
     }
 
-    const response = await fetch(`${_API_BASE_URL}/api/view-news/create`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer${accessToken}`,
-      },
-      body: JSON.stringify({ newsId, userId }),
-    })
+    const {data} = await axiosInstance.post(`${_API_BASE_URL}/api/view-news/create`,{userId:userId,newsId:newsId})
 
-    const rawResponse = await response.json()
-
-    if (rawResponse) {
-      return rawResponse
-    }
-  } catch (error) {
-    console.log(error)
+  return data
   }
-}
-export const updateNewViews = async (input: { newsId: string; userId: string; accessToken: string }) => {
-  try {
-    const { newsId, userId, accessToken } = input
+   
+export const updateNewViews = async (input: { newsId: string; userId: string}) => {
+
+    const { newsId, userId } = input
 
     if (!newsId || newsId === '') {
       return { success: false, data: null, message: 'Invalid Id' }
     }
 
-    const response = await fetch(`${_API_BASE_URL}/api/news/update-views`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer${accessToken}`,
-      },
-      body: JSON.stringify({ newsId, userId }),
-    })
-
-    const rawResponse = await response.json()
-
-    if (rawResponse) {
-      return rawResponse
-    }
-  } catch (error) {
-    console.log(error)
-  }
+    const {data} = await axiosInstance.post(`${_API_BASE_URL}/api/news/update-views`,{userId:userId,newsId:newsId})
+    console.log(data)
+    return data
 }
