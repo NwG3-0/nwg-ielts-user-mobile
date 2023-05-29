@@ -5,6 +5,8 @@ import { PrivateLayout } from 'layouts/PrivateLayout/PrivateLayout'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { LoginScreen } from 'components/Auth/Login'
 import { withAuth } from 'hocs/withauth'
+import AsyncStorage from '@react-native-async-storage/async-storage'
+import { globalStore } from 'hocs/globalStore'
 
 const Stack = createNativeStackNavigator()
 const queryClient = new QueryClient({
@@ -17,7 +19,11 @@ const queryClient = new QueryClient({
 })
 
 const App = ({ ...props }) => {
+
   const { user } = props
+  // useEffect(()=>{
+  //   AsyncStorage.clear()
+  // },[])
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -29,6 +35,7 @@ const App = ({ ...props }) => {
           {user.email === '' ? (
             <>
               <Stack.Screen name="Login" component={LoginScreen} />
+           
             </>
           ) : (
             <>

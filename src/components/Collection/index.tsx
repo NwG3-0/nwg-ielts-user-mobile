@@ -56,23 +56,7 @@ export const Collection = ({ route, navigation }: CollectionScreenProps) => {
     <>
       <SafeAreaView />
       <CommonModal open={openModal} setOpen={setOpenModal} word={inspectedWord} />
-      <DatePickerModal
-        locale="en"
-        mode="range"
-        visible={open}
-        onDismiss={onDismiss}
-        startDate={range.startDate}
-        endDate={range.endDate}
-        onConfirm={onConfirm}
-      />
       <View style={{ marginHorizontal: 20 }}>
-        <View style={styles.input}>
-          <TextInput
-            placeholder="Pick a range date"
-            // value={startDate + '-' + endDate}
-            onFocus={() => setOpen(true)}
-          />
-        </View>
         <DropdownPicker data={data} pickedItem={pickedTopic} setPickedItem={setPickedTopic} />
         <Text style={{ marginTop: 20, fontWeight: '600', fontSize: 16 }}>Saved word:</Text>
         <View style={{ marginTop: 15 }}>

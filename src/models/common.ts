@@ -8,6 +8,7 @@ export type RootStackParamList = {
   Home: undefined
   BottomTab: undefined
   Collection: undefined
+  Videos:undefined
 }
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
   RootStackParamList,

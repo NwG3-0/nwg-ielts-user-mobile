@@ -9,6 +9,7 @@ import Input from 'common/InputPassword'
 import { AuthStyles } from 'style/auth'
 import { OpenURLButton } from 'common/OpenURLButton'
 import { LoginScreenProps } from 'models/common'
+import { globalStore } from 'hocs/globalStore'
 
 export const LoginScreen = ({ navigation }: any) => {
   const [isHidePassword, setIsHidePassword] = useState(true)
@@ -16,29 +17,25 @@ export const LoginScreen = ({ navigation }: any) => {
   const [info, setInfo] = useState({ email: '', password: '' })
 
   const [setUserInfo] = useDataLoginInfoStore((state: any) => [state.setUserInfo])
-
+  const { user,setUser} = globalStore((state: any) => state.userStore)
   const onLogin = async (e: { preventDefault: () => void }) => {
-    try {
+   
       e.preventDefault()
-      setIsLoading(true)
+    
       if (info.email !== '' && info.password !== '') {
-        const { success, data } = await login({
+        const {success,data } = await login({
           email: info.email,
           password: info.password,
         })
-        console.log(success, data)
-        if (success) {
+      if (success) {
           AsyncStorage.setItem(USER_INFO, JSON.stringify(data))
-          setUserInfo(data)
-
-          navigation.navigate('PrivateLayout',{screen:'Home'})
+          setUser(data)
+        
+        navigation.navigate('PrivateLayout',{screen:'Home'})
+         
         }
       }
-    } catch (error) {
-      console.log(error)
-    } finally {
-      setIsLoading(false)
-    }
+ 
   }
 
   return (

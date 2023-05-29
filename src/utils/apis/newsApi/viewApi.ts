@@ -38,6 +38,5 @@ export const updateNewViews = async (input: { newsId: string; userId: string}) =
     }
 
     const {data} = await axiosInstance.post(`${_API_BASE_URL}/api/news/update-views`,{userId:userId,newsId:newsId})
-    console.log(data)
     return data
 }
