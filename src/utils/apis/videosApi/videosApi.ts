@@ -18,7 +18,7 @@ export const getLearningVideoDetail = async (input: { learningVideoId: string })
     return { success: false, data: null, message: 'Invalid Id' }
   }
   const { data } = await axiosInstance.get(
-    `${_API_BASE_URL}/api/learning-video-detail?learningVideoId=${learningVideoId}`,
+    `${_API_BASE_URL}/api/learning-video-detail?learning_video_id=${learningVideoId}`,
   )
 
   return data
@@ -29,7 +29,7 @@ export const getVideoSubtitle = async (input: { learningVideoId: string }) => {
   if (!learningVideoId || learningVideoId === '') {
     return { success: false, data: null, message: 'Invalid Id' }
   }
-  const { data } = await axiosInstance.get(`${_API_BASE_URL}/api/subtitle?learningVideoId=${learningVideoId}`)
+  const { data } = await axiosInstance.get(`${_API_BASE_URL}/api/subtitle?learning_video_id=${learningVideoId}`)
 
   return data
 }

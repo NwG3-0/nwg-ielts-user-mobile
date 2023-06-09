@@ -9,6 +9,7 @@ export type RootStackParamList = {
   BottomTab: undefined
   Collection: undefined
   Videos:undefined
+  VideoDetail:{videoId:string}
 }
 export type RootStackScreenProps<Screen extends keyof RootStackParamList> = NativeStackScreenProps<
   RootStackParamList,

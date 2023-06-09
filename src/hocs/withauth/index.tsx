@@ -14,7 +14,7 @@ dayjs.extend(utc)
 export const withAuth = (Component: any) => {
   const WithAuthWrapper = (props: any) => {
     const { user, setUser } = globalStore((state: any) => state.userStore)
-
+console.log(user)
     const onGetCurrentUser = async () => {
       try {
         const authDataSerialized = await AsyncStorage.getItem(USER_INFO)
