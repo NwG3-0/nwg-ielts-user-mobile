@@ -1,26 +1,19 @@
+import React, { useCallback, useRef, useState } from 'react'
+import { InView, IOScrollView } from 'react-native-intersection-observer'
+
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { useGetLearningVideoDetail } from 'hooks/useGetLearningVideoDetail'
 import { useGetLearningVideoSubtitle } from 'hooks/useGetVideoSubtitle'
 import { RootStackParamList } from 'models/common'
-import React, { useCallback, useMemo, useRef, useState } from 'react'
-import InViewPort  from 'react-native-inviewport'
-import { Text, SafeAreaView, View, ScrollView } from 'react-native'
+import { Text, SafeAreaView, View, ScrollView, Pressable } from 'react-native'
 import YoutubePlayer from 'react-native-youtube-iframe'
+import { useVideoDetailController } from './controller/useVideoDetailController'
+
 type VideoDetailProps = NativeStackScreenProps<RootStackParamList, 'VideoDetail'>
+
 function VideoDetail({ ...props }: VideoDetailProps) {
-  const { data: videoId } = useGetLearningVideoDetail({ learningVideoId: props.route.params?.videoId })
-  const { data: videoSub } = useGetLearningVideoSubtitle({ learningVideoId: props.route.params?.videoId })
-  const [startTime, setStartTime] = useState<number>(0)
-  const opts = useMemo(() => {
-    return {
-      height: '390',
-      width: '640',
-      playerVars: {
-        autoplay: 1,
-        start: startTime, // set the start time in seconds
-      },
-    }
-  }, [startTime])
+  const { video, videoVietSub } = useVideoDetailController(props.route.params?.videoId)
+
   const playerRef = useRef<any>(null)
   const subRef = useRef<any>(null)
   const [playing, setPlaying] = useState(false)
@@ -32,51 +25,75 @@ function VideoDetail({ ...props }: VideoDetailProps) {
   })
 
   // console.log(props.route.params.videoId)
-  const onChangeVideoDetail = (e) => {
+  const onChangeVideoDetail = (e: string) => {
     if (e == 'playing') {
-     setInterval(async () => {
+      const playInterval = setInterval(async () => {
         const elapsed_sec = await playerRef.current.getCurrentTime()
-       
+
         // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
         setCurrentTime(elapsed_sec || 0)
       }, 1000)
+
+      return () => {
+        clearInterval(playInterval)
+      }
     }
   }
 
+  const onChangeView = useCallback(
+    (inViewCheck: boolean) => {
+      console.log('Inview:', inViewCheck)
+    },
+    [currentTime],
+  )
+
   return (
-    <View >
+    <View>
       <SafeAreaView />
-
-      <YoutubePlayer
-        height={235}
-        play={playing}
-        videoId={videoId?.data.Link}
-        onChangeState={(e) => onChangeVideoDetail(e)}
-        ref={playerRef}
-      />
-      <ScrollView style={{marginBottom:300}}>
-    
-        {videoSub?.data.map((item, index) => {
-         
-          if (index < videoSub.data.length - 1 && item.start < currentTime && videoSub.data[index + 1].start > currentTime) {
-           
-            return (
-              <View style={{alignItems:'center',backgroundColor:'red',paddingVertical:8}} ref={subRef}>
-                <Text>{item.text}</Text>
-              </View>
-            )
-          }
-
-          else{
-            return (
-              <View style={{alignItems:'center',backgroundColor:'yellow',paddingVertical:8}}>
-                <Text>{item.text}</Text>
-              </View>
-            )
-          }
-        })}
-    
-      </ScrollView>
+      <Pressable
+        onPress={() => {
+          props.navigation.goBack()
+        }}
+      >
+        <Text>Back</Text>
+      </Pressable>
+      {video && videoVietSub && (
+        <React.Fragment>
+          <YoutubePlayer
+            height={235}
+            play={playing}
+            videoId={video.data?.Link}
+            onChangeState={(e) => onChangeVideoDetail(e)}
+            ref={playerRef}
+          />
+          <IOScrollView style={{ height: 300 }}>
+            {videoVietSub.data.map((item: any, index: number) => {
+              if (
+                index < videoVietSub.data.length - 1 &&
+                item.start < currentTime &&
+                videoVietSub.data[index + 1].start > currentTime
+              ) {
+                return (
+                  <View ref={subRef}>
+                    <InView
+                      onChange={onChangeView}
+                      style={{ alignItems: 'center', backgroundColor: 'red', paddingVertical: 8 }}
+                    >
+                      <Text>{item.text}</Text>
+                    </InView>
+                  </View>
+                )
+              } else {
+                return (
+                  <View style={{ alignItems: 'center', backgroundColor: 'yellow', paddingVertical: 8 }}>
+                    <Text>{item.text}</Text>
+                  </View>
+                )
+              }
+            })}
+          </IOScrollView>
+        </React.Fragment>
+      )}
     </View>
   )
 }
