@@ -92,7 +92,7 @@ export const LIST_RESOURCE: ListResource[] = [
     id: 7,
     icon: 'md-bookmarks-outline',
     color: '#2eb8b8',
-    title: 'Vocab Pack',
+    title: 'Collection',
   },
   {
     id: 8,

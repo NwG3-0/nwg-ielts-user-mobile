@@ -26,7 +26,7 @@ function TopicPicker({
   setPickedTopic,
   setOpen,
 }: TopicPickerProps) {
-  const topic = ['today', 'hehe', 'haha', 'huhu']
+  const topic = ['today', 'hehe', 'haha', 'hu']
   const handleTopicPicker = (topic: string) => {
     setPickedTopic(topic)
     setOpenDrop(false)
@@ -46,7 +46,7 @@ function TopicPicker({
       </Pressable>
 
       {openDrop && (
-        <View>
+        <View  style={[{marginTop:7}]} >
           {topic.map((item, id) => {
             return (
               <Pressable
@@ -54,6 +54,7 @@ function TopicPicker({
                   handleTopicPicker(item)
                 }}
                 key={id}
+                style={[{paddingVertical:5},id !== topic.length&&{borderBottomWidth:1}]}
               >
                 <Text>{item}</Text>
               </Pressable>

@@ -8,7 +8,7 @@ interface Parameters {
 }
 
 export const useCheckSaveWord = ({ word, userId }: Parameters) => {
-
+  console.log(word,userId)
   return useQuery({
     queryKey: [QUERY_KEYS.WORD, word, userId],
     queryFn: () => checkSavedWord({ word, userId }),

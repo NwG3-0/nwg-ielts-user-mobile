@@ -3,6 +3,7 @@ import { View } from 'react-native'
 import { NEWS_LIST, SELECT_NEWS } from 'utils/common'
 import { useNewsStore } from '../store'
 import SelectDropdown from 'react-native-select-dropdown'
+import { Text } from 'react-native-paper'
 
 export const SelectNewsTypes = () => {
   const { setTypes } = useNewsStore((state: any) => state.typeNewsStore)
@@ -22,7 +23,7 @@ export const SelectNewsTypes = () => {
         marginTop: 20,
       }}
     >
-      <SelectDropdown data={SELECT_NEWS} onSelect={onChangeValue} />
+      <SelectDropdown data={SELECT_NEWS} onSelect={onChangeValue} buttonStyle={{backgroundColor:'#C3C3C3'}}/>
     </View>
   )
 }

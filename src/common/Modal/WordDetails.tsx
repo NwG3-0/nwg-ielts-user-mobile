@@ -52,7 +52,7 @@ function WordDetails({ word, wordDetail, setDisplayTopicPicker, checkSave, setOp
         )
       })}
       <Pressable
-        disabled={checkSave? true : false}
+        disabled={checkSave ? true : false}
         onPress={() => setDisplayTopicPicker(true)}
         style={{ alignSelf: 'center' }}
       >

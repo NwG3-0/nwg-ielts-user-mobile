@@ -20,7 +20,7 @@ export const OpenURLButton = ({ text, customStyle, url }: Props) => {
   return (
     <TouchableOpacity onPress={handleClick}>
       <View style={customStyle}>
-        <Text>{text}</Text>
+        <Text style={[customStyle,{alignSelf:'flex-start'}]}>{text}</Text>
       </View>
     </TouchableOpacity>
   )

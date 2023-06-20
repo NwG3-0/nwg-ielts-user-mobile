@@ -36,7 +36,7 @@ export const News = ({ navigation }: NewsProps) => {
     keyword,
     type: types,
   })
-
+  console.log(news_list)
   return (
     <SafeAreaView>
       <Header />

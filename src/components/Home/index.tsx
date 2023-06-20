@@ -67,7 +67,7 @@ export const HomeScreen = ({ navigation }: HomeScreenProps) => {
         </View>
         <View style={{ width: WIDTH, flexWrap: 'wrap', display: 'flex', flexDirection: 'row', paddingHorizontal: 20 }}>
           {LIST_RESOURCE.map((item: ListResource) => (
-            <Pressable onPress={() => navigation.navigate('Videos')} key={item.id}>
+            <Pressable onPress={() => navigation.navigate(item.title)} key={item.id}>
               <View
                 style={{
                   width: (WIDTH - 40) / 5,

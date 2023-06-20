@@ -20,9 +20,8 @@ export const getNewsTypeList = async (input: {
   const type = input.type
 
   const { data } = await axiosInstance.get(
-    `/api/news-type?limit=${limit}&page=${page}&keyword=${keyword}&device=${DEVICES.MOBILE}&type=${type}`,
+    `${_API_BASE_URL}/api/news-type?limit=${limit}&page=${page}&keyword=${keyword}&type=${type}`,
   )
-
   return data
 }
 

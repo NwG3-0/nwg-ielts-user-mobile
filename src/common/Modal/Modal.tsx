@@ -25,7 +25,6 @@ function CommonModal({ open, setOpen, word }: CommonModalProps) {
   const [pickedTopic, setPickedTopic] = useState('')
   const { user } = globalStore((state: any) => state.userStore)
   const [phoneticAudio, setPhoneticAudio] = useState('')
-console.log(user.id)
   const { data: wordDetail, isLoading: isLoadingWord } = useQuery(
     [QUERY_KEYS.WORD, word],
     async () => {
